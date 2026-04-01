@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月圆之夜 - 镜中对决图鉴站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 215, 0, 0.1) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 10% 80%, rgba(124, 110, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 90% 80%, rgba(245, 200, 66, 0.06) 0%, transparent 50%);
+        }
+        
+        /* 头部 */
+        .header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+        
+        .logo {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .title {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #8a93c0;
+            letter-spacing: 2px;
+        }
+        
+        .season-tag {
+            display: inline-block;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #f5c842, #ff9800);
+            color: #1a1200;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 24px;
+            border-radius: 25px;
+            letter-spacing: 2px;
+        }
+        
+        /* 主内容区 */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 导航卡片网格 */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .nav-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 35px 30px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .nav-card:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.15);
+        }
+        
+        .nav-card.hero {
+            border-color: rgba(239, 83, 80, 0.3);
+        }
+        .nav-card.hero:hover {
+            border-color: rgba(239, 83, 80, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(239, 83, 80, 0.2);
+        }
+        
+        .nav-card.minion {
+            border-color: rgba(102, 187, 106, 0.3);
+        }
+        .nav-card.minion:hover {
+            border-color: rgba(102, 187, 106, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(102, 187, 106, 0.2);
+        }
+        
+        .nav-card.equip {
+            border-color: rgba(245, 200, 66, 0.3);
+        }
+        .nav-card.equip:hover {
+            border-color: rgba(245, 200, 66, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(245, 200, 66, 0.2);
+        }
+        
+        .nav-card.spell {
+            border-color: rgba(124, 110, 247, 0.3);
+        }
+        .nav-card.spell:hover {
+            border-color: rgba(124, 110, 247, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(124, 110, 247, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .card-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        
+        .card-desc {
+            font-size: 1em;
+            color: #8a93c0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .card-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        
+        .card-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .card-arrow {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .nav-card:hover .card-arrow {
+            opacity: 1;
+            right: 20px;
+        }
+        
+        /* 更新公告区 */
+        .announcement {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-top: 30px;
+        }
+        
+        .announcement-title {
+            font-size: 1.3em;
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .announcement-list {
+            list-style: none;
+        }
+        
+        .announcement-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .announcement-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .announcement-list .date {
+            color: #66bb6a;
+            font-size: 0.85em;
+            min-width: 90px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #4a5278;
+            font-size: 0.9em;
+        }
+        
+        .footer a {
+            color: #7c6ef7;
+            text-decoration: none;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2em;
+            }
+            .nav-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .nav-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">🎭</div>
+        <h1 class="title">月圆之夜</h1>
+        <p class="subtitle">镜中对决图鉴站</p>
+        <span class="season-tag">🏆 S11 狂欢游乐园</span>
+    </header>
+    
+    <main class="container">
+        <div class="nav-grid">
+            <a href="月圆之夜英雄看板.html" class="nav-card hero">
+                <span class="card-icon">👑</span>
+                <h2 class="card-title">英雄图鉴</h2>
+                <p class="card-desc">查看全部48位英雄的详细资料、技能效果和强度评级</p>
+                <div class="card-stats">
+                    <span class="card-stat">⚔️ 48位英雄</span>
+                    <span class="card-stat">📊 强度分级</span>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+            
+            <a href="随从图鉴看板.html" class="nav-card minion">
+                <span class="card-icon">🃏</span>
+                <h2 class="card-title">随从图鉴</h2>
+                <p class="card-desc">8大种族232张随从卡牌，支持星级和种族双重筛选</p>
+                <div class="card-stats">
+                    <span class="card-stat">🎴 232张卡牌</span>
+                    <span class="card-stat">🏷️ 8个种族</span>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+            
+            <a href="装备图鉴看板.html" class="nav-card equip">
+                <span class="card-icon">⚔️</span>
+                <h2 class="card-title">装备图鉴</h2>
+                <p class="card-desc">探索各类装备卡牌，了解装备效果和最佳搭配策略</p>
+                <div class="card-stats">
+                    <span class="card-stat">🛡️ 装备数据</span>
+                    <span class="card-stat">✨ 效果检索</span>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+            
+            <a href="咒术图鉴看板.html" class="nav-card spell">
+                <span class="card-icon">🔮</span>
+                <h2 class="card-title">咒术图鉴</h2>
+                <p class="card-desc">掌握各种咒术卡牌，了解咒术效果和使用时机</p>
+                <div class="card-stats">
+                    <span class="card-stat">📜 咒术数据</span>
+                    <span class="card-stat">🎯 效果分类</span>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+        </div>
+        
+        <div class="announcement">
+            <h3 class="announcement-title">📢 更新公告</h3>
+            <ul class="announcement-list">
+                <li>
+                    <span class="date">2026-04-01</span>
+                    <span>🎉 网站门户首页上线，整合四大图鉴看板</span>
+                </li>
+                <li>
+                    <span class="date">2026-04-01</span>
+                    <span>🎭 英雄图鉴完成改造，新增真实英雄图片和统计面板</span>
+                </li>
+                <li>
+                    <span class="date">2026-04-01</span>
+                    <span>🃏 随从图鉴更新，完整收录S11赛季8种族232张卡牌</span>
+                </li>
+                <li>
+                    <span class="date">2026-03-31</span>
+                    <span>🏆 新增S11赛季狂欢游乐园相关内容</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>🎭 月圆之夜 · 镜中对决图鉴站 | 非官方网站，仅供学习交流</p>
+        <p style="margin-top: 8px;">数据来源：游戏内实测与社区整理</p>
+    </footer>
+</body>
+</html>
