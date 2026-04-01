@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月圆之夜 镜中对决 咒术图鉴</title>
+<style>
+:root {
+  --bg-deep: #080b14;
+  --bg-card: #0f1322;
+  --bg-panel: #141826;
+  --bg-hover: #1c2238;
+  --border: #252d4a;
+  --border-glow: #3a4a8a;
+  --text-primary: #e8eaf6;
+  --text-secondary: #8a93c0;
+  --text-muted: #4a5278;
+  --accent: #7c6ef7;
+  --accent-glow: rgba(124,110,247,0.2);
+  --gold: #f5c842;
+  --gold-glow: rgba(245,200,66,0.15);
+  --cyan: #26c6da;
+  --green: #66bb6a;
+  --red: #ef5350;
+  --orange: #ff9800;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
+  --t: 0.2s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif;
+  background:var(--bg-deep);color:var(--text-primary);
+  min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,110,247,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(245,200,66,.06) 0%, transparent 50%);
+}
+
+/* ===== SITE SWITCHER ===== */
+.site-switcher{
+  position:relative;z-index:20;
+  background:rgba(8,11,20,.95);
+  border-bottom:1px solid var(--border);
+  padding:8px 36px;
+  display:flex;align-items:center;gap:8px;
+}
+.switcher-label{font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-right:4px;}
+.switcher-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;font-size:12px;font-weight:600;
+  border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--text-secondary);
+  cursor:pointer;transition:var(--t);text-decoration:none;
+  letter-spacing:.5px;
+}
+.switcher-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
+.switcher-btn.current{
+  background:var(--accent);border-color:var(--accent);
+  color:#fff;cursor:default;
+}
+.switcher-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:currentColor;display:inline-block;
+}
+
+/* ===== HEADER ===== */
+.site-header{
+  position:relative;z-index:10;
+  padding:24px 36px 0;
+  display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+}
+.site-title{
+  font-size:24px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,#ab47bc 0%,#7c6ef7 45%,#26c6da 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.site-sub{
+  font-size:12px;color:var(--text-secondary);letter-spacing:1px;
+  border-left:2px solid var(--border-glow);padding-left:10px;margin-bottom:3px;
+}
+.season-badge{
+  margin-left:auto;
+  background:linear-gradient(135deg,#f5c842,#ff9800);
+  color:#1a1200;font-size:11px;font-weight:700;
+  padding:4px 14px;border-radius:20px;letter-spacing:1px;
+}
+
+/* ===== MAIN WRAP ===== */
+.main-wrap{
+  position:relative;z-index:5;
+  max-width:1400px;margin:0 auto;
+  padding:28px 36px 60px;
+}
+
+/* ===== STATS ROW ===== */
+.stats-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.stat-card{
+  flex:1;min-width:120px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:14px 18px;text-align:center;
+}
+.stat-num{font-size:30px;font-weight:800;color:var(--accent);}
+.stat-lbl{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+/* ===== STAR FILTER ===== */
+.star-filter-wrap{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:16px 20px;margin-bottom:24px;
+}
+.star-filter-title{
+  font-size:13px;font-weight:600;color:var(--text-primary);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.star-filter-title::before{
+  content:'';width:3px;height:14px;
+  background:linear-gradient(180deg,var(--accent),var(--cyan));
+  border-radius:2px;
+}
+.star-filter{
+  display:flex;flex-wrap:wrap;gap:10px;
+}
+.star-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--r-md);
+  border:1px solid var(--border);background:var(--bg-panel);
+  color:var(--text-secondary);cursor:pointer;transition:var(--t);
+  font-size:13px;font-weight:500;
+}
+.star-btn:hover{border-color:var(--accent);color:var(--text-primary);}
+.star-btn.active{
+  background:var(--accent);border-color:var(--accent);
+  color:#fff;box-shadow:0 0 12px var(--accent-glow);
+}
+.star-btn .star-icon{color:var(--gold);font-size:12px;}
+.star-btn.active .star-icon{color:#fff;}
+.star-count{
+  background:rgba(255,255,255,.15);
+  padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:600;
+}
+
+/* ===== SPELL GRID ===== */
+.spell-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px;
+}
+
+/* ===== SPELL CARD ===== */
+.sc{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:14px;
+  cursor:pointer;transition:var(--t);
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.sc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  opacity:0;transition:var(--t);
+}
+.sc:hover{border-color:var(--border-glow);background:var(--bg-hover);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.4);}
+.sc:hover::before{opacity:1;}
+
+/* Star color borders */
+.sc[data-star="2"]{border-top:2px solid #78909c;}
+.sc[data-star="2"]::before{background:#78909c;}
+.sc[data-star="3"]{border-top:2px solid #42a5f5;}
+.sc[data-star="3"]::before{background:#42a5f5;}
+.sc[data-star="4"]{border-top:2px solid #66bb6a;}
+.sc[data-star="4"]::before{background:#66bb6a;}
+.sc[data-star="5"]{border-top:2px solid #ab47bc;}
+.sc[data-star="5"]::before{background:#ab47bc;}
+.sc[data-star="6"]{border-top:2px solid #ff9800;}
+.sc[data-star="6"]::before{background:#ff9800;}
+
+.sc-img-wrap{
+  width:100%;aspect-ratio:1;
+  background:var(--bg-panel);
+  border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;overflow:hidden;
+}
+.sc-img{
+  max-width:85%;max-height:85%;
+  object-fit:contain;
+  transition:var(--t);
+}
+.sc:hover .sc-img{transform:scale(1.05);}
+.sc-name{
+  font-size:13px;font-weight:600;color:var(--text-primary);
+  margin-bottom:6px;line-height:1.3;
+}
+.sc-stars{
+  display:flex;justify-content:center;gap:2px;
+}
+.sc-star{
+  font-size:11px;color:var(--text-muted);
+}
+.sc-star.lit{color:var(--gold);}
+.sc-star.s6{color:var(--orange);}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted);}
+.empty-icon{font-size:46px;margin-bottom:10px;}
+.empty-msg{font-size:14px;}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px){
+  .site-header{padding:20px 20px 0;}
+  .main-wrap{padding:20px 20px 40px;}
+  .site-switcher{padding:8px 20px;}
+  .spell-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SITE SWITCHER -->
+<div class="site-switcher">
+  <span class="switcher-label">图鉴切换</span>
+  <a href="月圆之夜英雄看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>英雄图鉴
+  </a>
+  <a href="随从图鉴看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>随从图鉴
+  </a>
+  <a href="装备图鉴看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>装备图鉴
+  </a>
+  <a href="咒术图鉴看板.html" class="switcher-btn current">
+    <span class="switcher-dot"></span>咒术图鉴
+  </a>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1 class="site-title">咒术图鉴</h1>
+  <span class="site-sub">镜中对决咒术卡牌大全</span>
+  <span class="season-badge">S11 狂欢游乐园</span>
+</header>
+
+<!-- MAIN -->
+<main class="main-wrap">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="total-count">112</div>
+      <div class="stat-lbl">咒术总数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ff9800">6</div>
+      <div class="stat-lbl">最高星级</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#66bb6a">30</div>
+      <div class="stat-lbl">4星咒术</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ab47bc">29</div>
+      <div class="stat-lbl">5星咒术</div>
+    </div>
+  </div>
+
+  <!-- STAR FILTER -->
+  <div class="star-filter-wrap">
+    <div class="star-filter-title">星级筛选</div>
+    <div class="star-filter">
+      <button class="star-btn active" data-filter="all">
+        <span>全部</span>
+        <span class="star-count">112</span>
+      </button>
+      <button class="star-btn" data-filter="2">
+        <span class="star-icon">★</span>
+        <span>2星</span>
+        <span class="star-count">12</span>
+      </button>
+      <button class="star-btn" data-filter="3">
+        <span class="star-icon">★</span>
+        <span>3星</span>
+        <span class="star-count">18</span>
+      </button>
+      <button class="star-btn" data-filter="4">
+        <span class="star-icon">★</span>
+        <span>4星</span>
+        <span class="star-count">30</span>
+      </button>
+      <button class="star-btn" data-filter="5">
+        <span class="star-icon">★</span>
+        <span>5星</span>
+        <span class="star-count">29</span>
+      </button>
+      <button class="star-btn" data-filter="6">
+        <span class="star-icon">★</span>
+        <span>6星</span>
+        <span class="star-count">23</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SPELL GRID -->
+  <div class="spell-grid" id="spell-grid">
+    <!-- Spell cards will be generated by JS -->
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty" id="empty-state" style="display:none;">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-msg">没有找到符合条件的咒术</div>
+  </div>
+
+</main>
+
+<script>
+// Spell data - extracted from filenames
+const spells = [
+  // 2星咒术 (12个)
+  {name:"饱食",star:2,img:"150px-月圆之夜_镜中对决_咒术_2饱食(2)0.png"},
+  {name:"激励",star:2,img:"150px-月圆之夜_镜中对决_咒术_2激励(2)0.png"},
+  {name:"帽子戏法",star:2,img:"150px-月圆之夜_镜中对决_咒术_2帽子戏法(2)0.png"},
+  {name:"女王旗帜",star:2,img:"150px-月圆之夜_镜中对决_咒术_2女王旗帜(2)0.png"},
+  {name:"上发条",star:2,img:"150px-月圆之夜_镜中对决_咒术_2上发条(2)0.png"},
+  {name:"上锁的日记",star:2,img:"150px-月圆之夜_镜中对决_咒术_2上锁的日记(2)0.png"},
+  {name:"生命庇护",star:2,img:"150px-月圆之夜_镜中对决_咒术_2生命庇护(2)0.png"},
+  {name:"生长",star:2,img:"150px-月圆之夜_镜中对决_咒术_2生长(2)0.png"},
+  {name:"头脑风暴",star:2,img:"150px-月圆之夜_镜中对决_咒术_2头脑风暴(2)0.png"},
+  {name:"稳固攻击",star:2,img:"150px-月圆之夜_镜中对决_咒术_2稳固攻击(2)0.png"},
+  {name:"响指",star:2,img:"150px-月圆之夜_镜中对决_咒术_2响指(2)0.png"},
+  {name:"许愿",star:2,img:"150px-月圆之夜_镜中对决_咒术_2许愿0.png"},
+  // 3星咒术 (18个)
+  {name:"饱食",star:3,img:"150px-月圆之夜_镜中对决_咒术_3饱食(3)0.png"},
+  {name:"抽奖",star:3,img:"150px-月圆之夜_镜中对决_咒术_3抽奖0.png"},
+  {name:"丛林探险",star:3,img:"150px-月圆之夜_镜中对决_咒术_3丛林探险(3)0.png"},
+  {name:"点石成金",star:3,img:"150px-月圆之夜_镜中对决_咒术_3点石成金0.png"},
+  {name:"骨卜",star:3,img:"150px-月圆之夜_镜中对决_咒术_3骨卜(3)0.png"},
+  {name:"护甲师",star:3,img:"150px-月圆之夜_镜中对决_咒术_3护甲师(3)0.png"},
+  {name:"剑术训练",star:3,img:"150px-月圆之夜_镜中对决_咒术_3剑术训练(3)0.png"},
+  {name:"绝妙藏品",star:3,img:"150px-月圆之夜_镜中对决_咒术_3绝妙藏品(3)0.png"},
+  {name:"力量祝福",star:3,img:"150px-月圆之夜_镜中对决_咒术_3力量祝福(3)0.png"},
+  {name:"量产工厂",star:3,img:"150px-月圆之夜_镜中对决_咒术_3量产工厂(3)0.png"},
+  {name:"帽子戏法",star:3,img:"150px-月圆之夜_镜中对决_咒术_3帽子戏法(3)0.png"},
+  {name:"拧紧螺栓",star:3,img:"150px-月圆之夜_镜中对决_咒术_3拧紧螺栓(3)0.png"},
+  {name:"上锁的日记",star:3,img:"150px-月圆之夜_镜中对决_咒术_3上锁的日记(3)0.png"},
+  {name:"生命庇护",star:3,img:"150px-月圆之夜_镜中对决_咒术_3生命庇护(3)0.png"},
+  {name:"头脑风暴",star:3,img:"150px-月圆之夜_镜中对决_咒术_3头脑风暴(3)0.png"},
+  {name:"稳固攻击",star:3,img:"150px-月圆之夜_镜中对决_咒术_3稳固攻击(3)0.png"},
+  {name:"异变之力",star:3,img:"150px-月圆之夜_镜中对决_咒术_3异变之力0.png"},
+  {name:"抓钩",star:3,img:"150px-月圆之夜_镜中对决_咒术_3抓钩0.png"},
+  // 4星咒术 (30个)
+  {name:"饱食",star:4,img:"150px-月圆之夜_镜中对决_咒术_4饱食(4)0.png"},
+  {name:"抽奖箱",star:4,img:"150px-月圆之夜_镜中对决_咒术_4抽奖箱0.png"},
+  {name:"吹嘘",star:4,img:"150px-月圆之夜_镜中对决_咒术_4吹嘘0.png"},
+  {name:"从零开始",star:4,img:"150px-月圆之夜_镜中对决_咒术_4从零开始(4)0.png"},
+  {name:"丛林探险",star:4,img:"150px-月圆之夜_镜中对决_咒术_4丛林探险(4)0.png"},
+  {name:"法力源泉",star:4,img:"150px-月圆之夜_镜中对决_咒术_4法力源泉(4)0.png"},
+  {name:"骨卜",star:4,img:"150px-月圆之夜_镜中对决_咒术_4骨卜(4)0.png"},
+  {name:"护甲师",star:4,img:"150px-月圆之夜_镜中对决_咒术_4护甲师(4)0.png"},
+  {name:"火球术",star:4,img:"150px-月圆之夜_镜中对决_咒术_4火球术(4)0.png"},
+  {name:"激励",star:4,img:"150px-月圆之夜_镜中对决_咒术_4激励(4)0.png"},
+  {name:"加速",star:4,img:"150px-月圆之夜_镜中对决_咒术_4加速(4)0.png"},
+  {name:"剑术训练",star:4,img:"150px-月圆之夜_镜中对决_咒术_4剑术训练(4)0.png"},
+  {name:"健美大赛",star:4,img:"150px-月圆之夜_镜中对决_咒术_4健美大赛0.png"},
+  {name:"精挑细选",star:4,img:"150px-月圆之夜_镜中对决_咒术_4精挑细选(4)0.png"},
+  {name:"绝妙藏品",star:4,img:"150px-月圆之夜_镜中对决_咒术_4绝妙藏品(4)0.png"},
+  {name:"理财能手",star:4,img:"150px-月圆之夜_镜中对决_咒术_4理财能手(4)0.png"},
+  {name:"力量压制",star:4,img:"150px-月圆之夜_镜中对决_咒术_4力量压制(4)0.png"},
+  {name:"量产工厂",star:4,img:"150px-月圆之夜_镜中对决_咒术_4量产工厂(4)0.png"},
+  {name:"帽子戏法",star:4,img:"150px-月圆之夜_镜中对决_咒术_4帽子戏法(4)0.png"},
+  {name:"迷失森林",star:4,img:"150px-月圆之夜_镜中对决_咒术_4迷失森林(4)0.png"},
+  {name:"女王旗帜",star:4,img:"150px-月圆之夜_镜中对决_咒术_4女王旗帜(4)0.png"},
+  {name:"上发条",star:4,img:"150px-月圆之夜_镜中对决_咒术_4上发条(4)0.png"},
+  {name:"生命庇护",star:4,img:"150px-月圆之夜_镜中对决_咒术_4生命庇护(4)0.png"},
+  {name:"生长",star:4,img:"150px-月圆之夜_镜中对决_咒术_4生长(4)0.png"},
+  {name:"头脑风暴",star:4,img:"150px-月圆之夜_镜中对决_咒术_4头脑风暴(4)0.png"},
+  {name:"吞没",star:4,img:"150px-月圆之夜_镜中对决_咒术_4吞没(4)0.png"},
+  {name:"稳固攻击",star:4,img:"150px-月圆之夜_镜中对决_咒术_4稳固攻击(4)0.png"},
+  {name:"贤者之石",star:4,img:"150px-月圆之夜_镜中对决_咒术_4贤者之石(4)0.png"},
+  {name:"响指",star:4,img:"150px-月圆之夜_镜中对决_咒术_4响指(4)0.png"},
+  {name:"炸弹",star:4,img:"150px-月圆之夜_镜中对决_咒术_4炸弹(4)0.png"},
+  // 5星咒术 (29个)
+  {name:"饱食",star:5,img:"150px-月圆之夜_镜中对决_咒术_5饱食(5)0.png"},
+  {name:"不稳定克隆",star:5,img:"150px-月圆之夜_镜中对决_咒术_5不稳定克隆0.png"},
+  {name:"从零开始",star:5,img:"150px-月圆之夜_镜中对决_咒术_5从零开始(5)0.png"},
+  {name:"丛林探险",star:5,img:"150px-月圆之夜_镜中对决_咒术_5丛林探险(5)0.png"},
+  {name:"雕像",star:5,img:"150px-月圆之夜_镜中对决_咒术_5雕像0.png"},
+  {name:"洞穴奇遇",star:5,img:"150px-月圆之夜_镜中对决_咒术_5洞穴奇遇0.png"},
+  {name:"恶魔天平",star:5,img:"150px-月圆之夜_镜中对决_咒术_5恶魔天平0.png"},
+  {name:"发财",star:5,img:"150px-月圆之夜_镜中对决_咒术_5发财(5)0.png"},
+  {name:"护甲师",star:5,img:"150px-月圆之夜_镜中对决_咒术_5护甲师(5)0.png"},
+  {name:"加速",star:5,img:"150px-月圆之夜_镜中对决_咒术_5加速(5)0.png"},
+  {name:"剑术陪练",star:5,img:"150px-月圆之夜_镜中对决_咒术_5剑术陪练0.png"},
+  {name:"剑术训练",star:5,img:"150px-月圆之夜_镜中对决_咒术_5剑术训练(5)0.png"},
+  {name:"精挑细选",star:5,img:"150px-月圆之夜_镜中对决_咒术_5精挑细选(5)0.png"},
+  {name:"绝妙藏品",star:5,img:"150px-月圆之夜_镜中对决_咒术_5绝妙藏品(5)0.png"},
+  {name:"考古学",star:5,img:"150px-月圆之夜_镜中对决_咒术_5考古学0.png"},
+  {name:"力量祝福",star:5,img:"150px-月圆之夜_镜中对决_咒术_5力量祝福(5)0.png"},
+  {name:"量产工厂",star:5,img:"150px-月圆之夜_镜中对决_咒术_5量产工厂(5)0.png"},
+  {name:"迷失森林",star:5,img:"150px-月圆之夜_镜中对决_咒术_5迷失森林(5)0.png"},
+  {name:"命悬一线",star:5,img:"150px-月圆之夜_镜中对决_咒术_5命悬一线(5)0.png"},
+  {name:"拧紧螺栓",star:5,img:"150px-月圆之夜_镜中对决_咒术_5拧紧螺栓(5)0.png"},
+  {name:"巧夺",star:5,img:"150px-月圆之夜_镜中对决_咒术_5巧夺0.png"},
+  {name:"三头六臂",star:5,img:"150px-月圆之夜_镜中对决_咒术_5三头六臂0.png"},
+  {name:"头脑风暴",star:5,img:"150px-月圆之夜_镜中对决_咒术_5头脑风暴(5)0.png"},
+  {name:"挖掘宝物",star:5,img:"150px-月圆之夜_镜中对决_咒术_5挖掘宝物0.png"},
+  {name:"吸尘器",star:5,img:"150px-月圆之夜_镜中对决_咒术_5吸尘器0.png"},
+  {name:"贤者之石",star:5,img:"150px-月圆之夜_镜中对决_咒术_5贤者之石(5)0.png"},
+  {name:"原始法则",star:5,img:"150px-月圆之夜_镜中对决_咒术_5原始法则0.png"},
+  {name:"招募强者",star:5,img:"150px-月圆之夜_镜中对决_咒术_5招募强者0.png"},
+  {name:"最后的希望",star:5,img:"150px-月圆之夜_镜中对决_咒术_5最后的希望0.png"},
+  // 6星咒术 (23个)
+  {name:"饱食",star:6,img:"150px-月圆之夜_镜中对决_咒术_6饱食(6)0.png"},
+  {name:"丛林探险",star:6,img:"150px-月圆之夜_镜中对决_咒术_6丛林探险(6)0.png"},
+  {name:"发财",star:6,img:"150px-月圆之夜_镜中对决_咒术_6发财(6)0.png"},
+  {name:"法力源泉",star:6,img:"150px-月圆之夜_镜中对决_咒术_6法力源泉(6)0.png"},
+  {name:"鬼牌",star:6,img:"150px-月圆之夜_镜中对决_咒术_6鬼牌0.png"},
+  {name:"火球术",star:6,img:"150px-月圆之夜_镜中对决_咒术_6火球术(6)0.png"},
+  {name:"捡漏",star:6,img:"150px-月圆之夜_镜中对决_咒术_6捡漏0.png"},
+  {name:"精挑细选",star:6,img:"150px-月圆之夜_镜中对决_咒术_6精挑细选(6)0.png"},
+  {name:"绝妙藏品",star:6,img:"150px-月圆之夜_镜中对决_咒术_6绝妙藏品(6)0.png"},
+  {name:"卡牌包",star:6,img:"150px-月圆之夜_镜中对决_咒术_6卡牌包0.png"},
+  {name:"理财能手",star:6,img:"150px-月圆之夜_镜中对决_咒术_6理财能手(6)0.png"},
+  {name:"力量压制",star:6,img:"150px-月圆之夜_镜中对决_咒术_6力量压制(6)0.png"},
+  {name:"量产工厂",star:6,img:"150px-月圆之夜_镜中对决_咒术_6量产工厂(6)0.png"},
+  {name:"量身定做",star:6,img:"150px-月圆之夜_镜中对决_咒术_6量身定做0.png"},
+  {name:"命悬一线",star:6,img:"150px-月圆之夜_镜中对决_咒术_6命悬一线0.png"},
+  {name:"魔术怀表",star:6,img:"150px-月圆之夜_镜中对决_咒术_6魔术怀表0.png"},
+  {name:"拍卖会",star:6,img:"150px-月圆之夜_镜中对决_咒术_6拍卖会0.png"},
+  {name:"千刀万剐",star:6,img:"150px-月圆之夜_镜中对决_咒术_6千刀万剐0.png"},
+  {name:"神圣祝福",star:6,img:"150px-月圆之夜_镜中对决_咒术_6神圣祝福0.png"},
+  {name:"吞没",star:6,img:"150px-月圆之夜_镜中对决_咒术_6吞没(6)0.png"},
+  {name:"许愿神灯",star:6,img:"150px-月圆之夜_镜中对决_咒术_6许愿神灯0.png"},
+  {name:"血瓶",star:6,img:"150px-月圆之夜_镜中对决_咒术_6血瓶0.png"},
+  {name:"炸弹",star:6,img:"150px-月圆之夜_镜中对决_咒术_6炸弹(6)0.png"}
+];
+
+// Image base path (relative to HTML file location)
+const IMG_BASE_PATH = "file:///C:/Users/asus/WorkBuddy/20260330162824/咒术卡牌/";
+
+let currentFilter = 'all';
+
+function renderSpells(){
+  const grid = document.getElementById('spell-grid');
+  const empty = document.getElementById('empty-state');
+  
+  const filtered = currentFilter === 'all' 
+    ? spells 
+    : spells.filter(s => s.star === parseInt(currentFilter));
+  
+  if(filtered.length === 0){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  
+  grid.innerHTML = filtered.map(spell => {
+    const stars = Array(6).fill(0).map((_,i) => 
+      `<span class="sc-star ${i < spell.star ? 'lit' : ''} ${spell.star === 6 ? 's6' : ''}">★</span>`
+    ).join('');
+    
+    return `
+      <div class="sc" data-star="${spell.star}" data-name="${spell.name}">
+        <div class="sc-img-wrap">
+          <img class="sc-img" src="${IMG_BASE_PATH}${spell.img}" alt="${spell.name}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="sc-name">${spell.name}</div>
+        <div class="sc-stars">${stars}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Filter buttons
+document.querySelectorAll('.star-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderSpells();
+  });
+});
+
+// Initial render
+renderSpells();
+</script>
+
+</body>
+</html>

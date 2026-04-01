@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月圆之夜 - 随从图鉴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .header {
+            background: linear-gradient(90deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a4a6a;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #ffd700, #ff6b6b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 10px 25px;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3e);
+            border: 2px solid #4a4a6a;
+            border-radius: 25px;
+            color: #aaa;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .nav-tab:hover, .nav-tab.active {
+            background: linear-gradient(145deg, #4a4a6a, #3a3a5a);
+            border-color: #ffd700;
+            color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .filter-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .filter-title {
+            font-size: 1.1em;
+            color: #ffd700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #4a4a6a;
+            background: rgba(255,255,255,0.05);
+            color: #aaa;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .filter-btn.active {
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        /* 星级按钮颜色 */
+        .filter-btn.star-all.active { background: linear-gradient(145deg, #666, #444); border-color: #888; }
+        .filter-btn.star-1.active { background: linear-gradient(145deg, #8B4513, #654321); border-color: #CD853F; }
+        .filter-btn.star-2.active { background: linear-gradient(145deg, #C0C0C0, #808080); border-color: #E8E8E8; }
+        .filter-btn.star-3.active { background: linear-gradient(145deg, #FFD700, #B8860B); border-color: #FFE55C; }
+        .filter-btn.star-4.active { background: linear-gradient(145deg, #00CED1, #008B8B); border-color: #40E0D0; }
+        .filter-btn.star-5.active { background: linear-gradient(145deg, #9370DB, #663399); border-color: #BA55D3; }
+        .filter-btn.star-6.active { background: linear-gradient(145deg, #FF6347, #CD5C5C); border-color: #FF7F50; }
+        /* 种族按钮颜色 */
+        .filter-btn.race-all.active { background: linear-gradient(145deg, #666, #444); border-color: #888; }
+        .filter-btn.race-zhongli.active { background: linear-gradient(145deg, #A9A9A9, #696969); border-color: #D3D3D3; }
+        .filter-btn.race-long.active { background: linear-gradient(145deg, #DC143C, #8B0000); border-color: #FF6347; }
+        .filter-btn.race-jixie.active { background: linear-gradient(145deg, #4682B4, #2F4F4F); border-color: #87CEEB; }
+        .filter-btn.race-ziran.active { background: linear-gradient(145deg, #228B22, #006400); border-color: #90EE90; }
+        .filter-btn.race-zhanshi.active { background: linear-gradient(145deg, #8B4513, #5C4033); border-color: #DEB887; }
+        .filter-btn.race-yeshou.active { background: linear-gradient(145deg, #D2691E, #8B4513); border-color: #F4A460; }
+        .filter-btn.race-youl.active { background: linear-gradient(145deg, #4B0082, #2F004F); border-color: #9370DB; }
+        .filter-btn.race-xingyi.active { background: linear-gradient(145deg, #191970, #0F0F4F); border-color: #6495ED; }
+        .stats {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .stats-number {
+            font-size: 2em;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .card {
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3e);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .card.star-1 { border-color: #8B4513; }
+        .card.star-2 { border-color: #C0C0C0; }
+        .card.star-3 { border-color: #FFD700; }
+        .card.star-4 { border-color: #00CED1; }
+        .card.star-5 { border-color: #9370DB; }
+        .card.star-6 { border-color: #FF6347; }
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+            padding: 5px;
+        }
+        .card-info {
+            padding: 10px;
+            text-align: center;
+        }
+        .card-name {
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .card-meta {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.8em;
+        }
+        .card-race {
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+        }
+        .card-race.zhongli { background: rgba(169,169,169,0.3); color: #D3D3D3; }
+        .card-race.long { background: rgba(220,20,60,0.3); color: #FF6347; }
+        .card-race.jixie { background: rgba(70,130,180,0.3); color: #87CEEB; }
+        .card-race.ziran { background: rgba(34,139,34,0.3); color: #90EE90; }
+        .card-race.zhanshi { background: rgba(139,69,19,0.3); color: #DEB887; }
+        .card-race.yeshou { background: rgba(210,105,30,0.3); color: #F4A460; }
+        .card-race.youl { background: rgba(75,0,130,0.3); color: #9370DB; }
+        .card-race.xingyi { background: rgba(25,25,112,0.3); color: #6495ED; }
+        .card-star {
+            color: #ffd700;
+        }
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+            font-size: 1.2em;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎭 月圆之夜 · 随从图鉴</h1>
+        <div class="nav-tabs">
+            <a href="月圆之夜英雄看板.html" class="nav-tab">英雄</a>
+            <a href="随从图鉴看板.html" class="nav-tab active">随从</a>
+            <a href="装备图鉴看板.html" class="nav-tab">装备</a>
+            <a href="咒术图鉴看板.html" class="nav-tab">咒术</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filter-section">
+            <div class="filter-title">⭐ 星级筛选</div>
+            <div class="filter-buttons" id="starFilters">
+                <button class="filter-btn star-all active" data-star="all">全部</button>
+                <button class="filter-btn star-1" data-star="1">⭐ 1星</button>
+                <button class="filter-btn star-2" data-star="2">⭐⭐ 2星</button>
+                <button class="filter-btn star-3" data-star="3">⭐⭐⭐ 3星</button>
+                <button class="filter-btn star-4" data-star="4">⭐⭐⭐⭐ 4星</button>
+                <button class="filter-btn star-5" data-star="5">⭐⭐⭐⭐⭐ 5星</button>
+                <button class="filter-btn star-6" data-star="6">⭐⭐⭐⭐⭐⭐ 6星</button>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">🏷️ 种族筛选</div>
+            <div class="filter-buttons" id="raceFilters">
+                <button class="filter-btn race-all active" data-race="all">全部</button>
+                <button class="filter-btn race-zhongli" data-race="中立">⚪ 中立</button>
+                <button class="filter-btn race-long" data-race="龙">🐉 龙族</button>
+                <button class="filter-btn race-jixie" data-race="机械">🔧 机械</button>
+                <button class="filter-btn race-ziran" data-race="自然">🌿 自然</button>
+                <button class="filter-btn race-zhanshi" data-race="战士">⚔️ 战士</button>
+                <button class="filter-btn race-yeshou" data-race="野兽">🐺 野兽</button>
+                <button class="filter-btn race-youl" data-race="幽灵">👻 幽灵</button>
+                <button class="filter-btn race-xingyi" data-race="星裔">✨ 星裔</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>当前显示: <span class="stats-number" id="cardCount">0</span> 张卡牌</div>
+        </div>
+
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    <script>
+        const cards = [
+            // 龙族 28张
+            {name:'捣蛋龙',race:'龙',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_1捣蛋龙0.png'},
+            {name:'飞龙幼崽',race:'龙',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_1飞龙幼崽0.png'},
+            {name:'龙语者',race:'龙',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_1龙语者0.png'},
+            {name:'保护之龙',race:'龙',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_2保护之龙0.png'},
+            {name:'超凡驯龙师',race:'龙',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_2超凡驯龙师0.png'},
+            {name:'烈焰雏龙',race:'龙',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_2烈焰雏龙0.png'},
+            {name:'淘气小龙',race:'龙',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_2淘气小龙0.png'},
+            {name:'白骨龙',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3白骨龙0.png'},
+            {name:'大地之龙',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3大地之龙0.png'},
+            {name:'法术龙灵',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3法术龙灵0.png'},
+            {name:'龙蛋吞噬者',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3龙蛋吞噬者0.png'},
+            {name:'死亡之龙',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3死亡之龙0.png'},
+            {name:'炎翼龙',race:'龙',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_3炎翼龙0.png'},
+            {name:'风龙',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4风龙0.png'},
+            {name:'龙骑士',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4龙骑士0.png'},
+            {name:'龙语诗人',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4龙语诗人0.png'},
+            {name:'守护之龙',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4守护之龙0.png'},
+            {name:'水之龙',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4水之龙0.png'},
+            {name:'幽龙',race:'龙',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_4幽龙0.png'},
+            {name:'赐福者',race:'龙',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_5赐福者0.png'},
+            {name:'强袭飞龙',race:'龙',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_5强袭飞龙0.png'},
+            {name:'圣龙',race:'龙',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_5圣龙0.png'},
+            {name:'噬魂之龙',race:'龙',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_5噬魂之龙0.png'},
+            {name:'灾厄巨龙',race:'龙',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_5灾厄巨龙0.png'},
+            {name:'白骨龙灵',race:'龙',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_6白骨龙灵0.png'},
+            {name:'雌火龙',race:'龙',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_6雌火龙0.png'},
+            {name:'龙骑士队长',race:'龙',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_6龙骑士队长0.png'},
+            {name:'栖湖古龙',race:'龙',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_龙_6栖湖古龙0.png'},
+            // 中立 36张
+            {name:'窃贼',race:'中立',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_1窃贼0.png'},
+            {name:'大厨',race:'中立',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_2大厨0.png'},
+            {name:'法力图腾',race:'中立',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_2法力图腾0.png'},
+            {name:'鉴赏家',race:'中立',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_2鉴赏家0.png'},
+            {name:'变色龙',race:'中立',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_3变色龙0.png'},
+            {name:'废土旅人',race:'中立',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_3废土旅人0.png'},
+            {name:'假面人',race:'中立',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_3假面人0.png'},
+            {name:'小鬼娃娃',race:'中立',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_3小鬼娃娃0.png'},
+            {name:'催眠师',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4催眠师0.png'},
+            {name:'典狱长',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4典狱长0.png'},
+            {name:'海盗宝箱',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4海盗宝箱0.png'},
+            {name:'集结号手',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4集结号手0.png'},
+            {name:'金矿矿贼',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4金矿矿贼0.png'},
+            {name:'科学家',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4科学家0.png'},
+            {name:'魔靴',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4魔靴0.png'},
+            {name:'杀手鱼人',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4杀手鱼人0.png'},
+            {name:'神射手',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4神射手0.png'},
+            {name:'探险者',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4探险者0.png'},
+            {name:'武器小偷',race:'中立',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_4武器小偷0.png'},
+            {name:'抄写员',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5抄写员0.png'},
+            {name:'防御者',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5防御者0.png'},
+            {name:'海盗船',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5海盗船0.png'},
+            {name:'精英刺客',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5精英刺客0.png'},
+            {name:'傀儡陷阱',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5傀儡陷阱0.png'},
+            {name:'酩酊酒客',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5酩酊酒客0.png'},
+            {name:'魔法精灵',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5魔法精灵0.png'},
+            {name:'寻宝狗头人',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5寻宝狗头人0.png'},
+            {name:'哑巴先知',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5哑巴先知0.png'},
+            {name:'勇敢挑战者',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5勇敢挑战者0.png'},
+            {name:'炸药专家',race:'中立',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_5炸药专家0.png'},
+            {name:'沉默医师',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6沉默医师0.png'},
+            {name:'鬼娃娃',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6鬼娃娃0.png'},
+            {name:'魔镜',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6魔镜0.png'},
+            {name:'魔女',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6魔女0.png'},
+            {name:'泉水之灵',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6泉水之灵0.png'},
+            {name:'死灵傀儡师',race:'中立',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_中立_6死灵傀儡师0.png'},
+            // 机械 28张
+            {name:'齿轮学徒',race:'机械',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_1齿轮学徒0.png'},
+            {name:'机器人',race:'机械',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_1机器人0.png'},
+            {name:'机械熊仔',race:'机械',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_1机械熊仔0.png'},
+            {name:'发条机械',race:'机械',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_2发条机械0.png'},
+            {name:'科研装置',race:'机械',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_2科研装置0.png'},
+            {name:'小型炮弹',race:'机械',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_2小型炮弹0.png'},
+            {name:'钻头',race:'机械',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_2钻头0.png'},
+            {name:'充能炮',race:'机械',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_3充能炮0.png'},
+            {name:'改装师',race:'机械',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_3改装师0.png'},
+            {name:'机械兔',race:'机械',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_3机械兔0.png'},
+            {name:'机械信使',race:'机械',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_3机械信使0.png'},
+            {name:'全副武装',race:'机械',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_3全副武装0.png'},
+            {name:'扳手助理',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4扳手助理0.png'},
+            {name:'防御要塞',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4防御要塞0.png'},
+            {name:'机械犬',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4机械犬0.png'},
+            {name:'零件商贩',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4零件商贩0.png'},
+            {name:'弱点侦察机',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4弱点侦察机0.png'},
+            {name:'玩具商人',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4玩具商人0.png'},
+            {name:'智慧星',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4智慧星0.png'},
+            {name:'智能机器人',race:'机械',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_4智能机器人0.png'},
+            {name:'发条淑女',race:'机械',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_5发条淑女0.png'},
+            {name:'钢筋铁甲',race:'机械',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_5钢筋铁甲0.png'},
+            {name:'拾荒者',race:'机械',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_5拾荒者0.png'},
+            {name:'铁皮人',race:'机械',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_5铁皮人0.png'},
+            {name:'钢铁之躯',race:'机械',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_6钢铁之躯0.png'},
+            {name:'机械套娃',race:'机械',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_6机械套娃0.png'},
+            {name:'扩音器',race:'机械',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_6扩音器0.png'},
+            {name:'炸药飞艇',race:'机械',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_机械_6炸药飞艇0.png'},
+            // 自然 28张
+            {name:'魔法树苗',race:'自然',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_1魔法树苗0.png'},
+            {name:'苔藓宝宝',race:'自然',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_1苔藓宝宝0.png'},
+            {name:'小树精',race:'自然',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_1小树精0.png'},
+            {name:'草灵',race:'自然',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_2草灵0.png'},
+            {name:'南瓜卫士',race:'自然',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_2南瓜卫士0.png'},
+            {name:'食人花',race:'自然',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_2食人花0.png'},
+            {name:'小石精',race:'自然',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_2小石精0.png'},
+            {name:'复仇树精',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3复仇树精0.png'},
+            {name:'古树',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3古树0.png'},
+            {name:'恐怖番茄',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3恐怖番茄0.png'},
+            {name:'林地看守',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3林地看守0.png'},
+            {name:'魔法南瓜',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3魔法南瓜0.png'},
+            {name:'石精灵',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3石精灵0.png'},
+            {name:'小蘑菇',race:'自然',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_3小蘑菇0.png'},
+            {name:'黑玫瑰',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4黑玫瑰0.png'},
+            {name:'狂乱树精',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4狂乱树精0.png'},
+            {name:'曼德拉草',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4曼德拉草0.png'},
+            {name:'沐恩树灵',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4沐恩树灵0.png'},
+            {name:'苔藓骑士',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4苔藓骑士0.png'},
+            {name:'自然仙灵',race:'自然',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_4自然仙灵0.png'},
+            {name:'孢子女巫',race:'自然',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_5孢子女巫0.png'},
+            {name:'孢子小姐',race:'自然',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_5孢子小姐0.png'},
+            {name:'花匠',race:'自然',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_5花匠0.png'},
+            {name:'蘑菇长老',race:'自然',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_5蘑菇长老0.png'},
+            {name:'捕萤草',race:'自然',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_6捕萤草0.png'},
+            {name:'梦境之树',race:'自然',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_6梦境之树0.png'},
+            {name:'蘑菇国王',race:'自然',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_6蘑菇国王0.png'},
+            {name:'石精巨兽',race:'自然',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_自然_6石精巨兽0.png'},
+            // 战士 28张
+            {name:'伐木工叔叔',race:'战士',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_1伐木工叔叔0.png'},
+            {name:'守卫',race:'战士',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_1守卫0.png'},
+            {name:'渔夫',race:'战士',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_1渔夫0.png'},
+            {name:'盾弩手',race:'战士',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_2盾弩手0.png'},
+            {name:'见习侍卫',race:'战士',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_2见习侍卫0.png'},
+            {name:'镣铐野人',race:'战士',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_2镣铐野人0.png'},
+            {name:'逃犯',race:'战士',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_2逃犯0.png'},
+            {name:'丛林巨人',race:'战士',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_3丛林巨人0.png'},
+            {name:'队长',race:'战士',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_3队长0.png'},
+            {name:'刽子手',race:'战士',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_3刽子手0.png'},
+            {name:'神秘铁匠',race:'战士',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_3神秘铁匠0.png'},
+            {name:'双持盾兵',race:'战士',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_3双持盾兵0.png'},
+            {name:'闯入者',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4闯入者0.png'},
+            {name:'斗士',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4斗士0.png'},
+            {name:'宫廷管家',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4宫廷管家0.png'},
+            {name:'玫瑰盾卫',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4玫瑰盾卫0.png'},
+            {name:'蔷薇骑士',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4蔷薇骑士0.png'},
+            {name:'贴身保镖',race:'战士',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_4贴身保镖0.png'},
+            {name:'保护者',race:'战士',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_5保护者0.png'},
+            {name:'裁缝',race:'战士',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_5裁缝0.png'},
+            {name:'裁决者',race:'战士',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_5裁决者0.png'},
+            {name:'老猎人',race:'战士',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_5老猎人0.png'},
+            {name:'纵火者',race:'战士',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_5纵火者0.png'},
+            {name:'持盾战士',race:'战士',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_6持盾战士0.png'},
+            {name:'玫瑰公爵',race:'战士',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_6玫瑰公爵0.png'},
+            {name:'骑士铠甲',race:'战士',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_6骑士铠甲0.png'},
+            {name:'受祝福的勇士',race:'战士',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_6受祝福的勇士0.png'},
+            {name:'野牛骑士长',race:'战士',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_战士_6野牛骑士长0.png'},
+            // 野兽 28张
+            {name:'鹳鸟',race:'野兽',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_1鹳鸟0.png'},
+            {name:'耐心蜘蛛',race:'野兽',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_1耐心蜘蛛0.png'},
+            {name:'水獭',race:'野兽',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_1水獭0.png'},
+            {name:'蹦蹦鹿',race:'野兽',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_2蹦蹦鹿0.png'},
+            {name:'穿山甲弟弟',race:'野兽',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_2穿山甲弟弟0.png'},
+            {name:'蝴蝶看守',race:'野兽',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_2蝴蝶看守0.png'},
+            {name:'贪睡蝙蝠',race:'野兽',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_2贪睡蝙蝠0.png'},
+            {name:'萤火虫',race:'野兽',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_2萤火虫0.png'},
+            {name:'黑马',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3黑马0.png'},
+            {name:'猎豹',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3猎豹0.png'},
+            {name:'贪财松鼠',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3贪财松鼠0.png'},
+            {name:'小蜜蜂',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3小蜜蜂0.png'},
+            {name:'信鸽',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3信鸽0.png'},
+            {name:'袖珍枪手',race:'野兽',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_3袖珍枪手0.png'},
+            {name:'丛林枭兽',race:'野兽',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_4丛林枭兽0.png'},
+            {name:'大耳火犬',race:'野兽',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_4大耳火犬0.png'},
+            {name:'地狱三头犬',race:'野兽',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_4地狱三头犬0.png'},
+            {name:'异国刺客',race:'野兽',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_4异国刺客0.png'},
+            {name:'炙火蝎',race:'野兽',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_4炙火蝎0.png'},
+            {name:'北极熊',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5北极熊0.png'},
+            {name:'毒蛇女王',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5毒蛇女王0.png'},
+            {name:'金刚',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5金刚0.png'},
+            {name:'猫头鹰法师',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5猫头鹰法师0.png'},
+            {name:'怒熊',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5怒熊0.png'},
+            {name:'鼠王',race:'野兽',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_5鼠王0.png'},
+            {name:'火枪支配者',race:'野兽',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_6火枪支配者0.png'},
+            {name:'绿毛哥',race:'野兽',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_6绿毛哥0.png'},
+            {name:'野猪',race:'野兽',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_野兽_6野猪0.png'},
+            // 幽灵 28张
+            {name:'夺魂者',race:'幽灵',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_1夺魂者0.png'},
+            {name:'鬼火',race:'幽灵',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_1鬼火0.png'},
+            {name:'亡魂宝箱',race:'幽灵',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_1亡魂宝箱0.png'},
+            {name:'罗生门',race:'幽灵',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_2罗生门0.png'},
+            {name:'冥界导游',race:'幽灵',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_2冥界导游0.png'},
+            {name:'冥界使者',race:'幽灵',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_2冥界使者0.png'},
+            {name:'亡魂吹笛者',race:'幽灵',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_2亡魂吹笛者0.png'},
+            {name:'处刑人',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3处刑人0.png'},
+            {name:'灵魂鼓手',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3灵魂鼓手0.png'},
+            {name:'亡魂舞者',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3亡魂舞者0.png'},
+            {name:'引路者',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3引路者0.png'},
+            {name:'幽灵船长',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3幽灵船长0.png'},
+            {name:'幽灵大盗',race:'幽灵',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_3幽灵大盗0.png'},
+            {name:'魂引者',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4魂引者0.png'},
+            {name:'灵魂祭司',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4灵魂祭司0.png'},
+            {name:'亡魂歌者',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4亡魂歌者0.png'},
+            {name:'亡魂铁匠',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4亡魂铁匠0.png'},
+            {name:'亡魂执行者',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4亡魂执行者0.png'},
+            {name:'幽灵巡礼者',race:'幽灵',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_4幽灵巡礼者0.png'},
+            {name:'灵魂缝合师',race:'幽灵',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_5灵魂缝合师0.png'},
+            {name:'石中剑',race:'幽灵',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_5石中剑0.png'},
+            {name:'侍僧',race:'幽灵',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_5侍僧0.png'},
+            {name:'亡魂音乐盒',race:'幽灵',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_5亡魂音乐盒0.png'},
+            {name:'追猎者',race:'幽灵',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_5追猎者0.png'},
+            {name:'缚魂棺',race:'幽灵',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_6缚魂棺0.png'},
+            {name:'古堡幽灵',race:'幽灵',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_6古堡幽灵0.png'},
+            {name:'灵魂共鸣者',race:'幽灵',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_6灵魂共鸣者0.png'},
+            {name:'灾厄',race:'幽灵',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_幽灵_6灾厄0.png'},
+            // 星裔 28张
+            {name:'牧羊人',race:'星裔',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_1牧羊人0.png'},
+            {name:'祈星师',race:'星裔',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_1祈星师0.png'},
+            {name:'养蝎人',race:'星裔',star:1,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_1养蝎人0.png'},
+            {name:'半人马',race:'星裔',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_2半人马0.png'},
+            {name:'宝瓶工匠',race:'星裔',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_2宝瓶工匠0.png'},
+            {name:'启明星使',race:'星裔',star:2,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_2启明星使0.png'},
+            {name:'黄金狮子',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3黄金狮子0.png'},
+            {name:'冥思者',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3冥思者0.png'},
+            {name:'双子骑士',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3双子骑士0.png'},
+            {name:'星轨测绘师',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3星轨测绘师0.png'},
+            {name:'星河巨蟹',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3星河巨蟹0.png'},
+            {name:'许愿星灵',race:'星裔',star:3,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_3许愿星灵0.png'},
+            {name:'流星使者',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4流星使者0.png'},
+            {name:'天平守卫',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4天平守卫0.png'},
+            {name:'星空旅者',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4星空旅者0.png'},
+            {name:'星星射手',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4星星射手0.png'},
+            {name:'银河游鱼',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4银河游鱼0.png'},
+            {name:'引星者',race:'星裔',star:4,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_4引星者0.png'},
+            {name:'摩羯之影',race:'星裔',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_5摩羯之影0.png'},
+            {name:'太阳之子',race:'星裔',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_5太阳之子0.png'},
+            {name:'星图画家',race:'星裔',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_5星图画家0.png'},
+            {name:'幽冥星使',race:'星裔',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_5幽冥星使0.png'},
+            {name:'智慧国王',race:'星裔',star:5,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_5智慧国王0.png'},
+            {name:'黑夜行者',race:'星裔',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_6黑夜行者0.png'},
+            {name:'星系建筑师',race:'星裔',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_6星系建筑师0.png'},
+            {name:'夜空之角',race:'星裔',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_6夜空之角0.png'},
+            {name:'月光骑士',race:'星裔',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_6月光骑士0.png'},
+            {name:'织星天女',race:'星裔',star:6,img:'随从卡牌/150px-月圆之夜_镜中对决_随从_星裔_6织星天女0.png'}
+        ];
+
+        let currentStar = 'all';
+        let currentRace = 'all';
+
+        function getRaceClass(race) {
+            const map = { '中立': 'zhongli', '龙': 'long', '机械': 'jixie', '自然': 'ziran', '战士': 'zhanshi', '野兽': 'yeshou', '幽灵': 'youl', '星裔': 'xingyi' };
+            return map[race] || 'zhongli';
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            const filtered = cards.filter(card => {
+                const starMatch = currentStar === 'all' || card.star === parseInt(currentStar);
+                const raceMatch = currentRace === 'all' || card.race === currentRace;
+                return starMatch && raceMatch;
+            });
+
+            document.getElementById('cardCount').textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">😕 没有找到符合条件的卡牌</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(card => `
+                <div class="card star-${card.star}">
+                    <img src="${card.img}" alt="${card.name}" class="card-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22180%22><rect fill=%22%23333%22 width=%22150%22 height=%22180%22/><text fill=%22%23999%22 x=%2275%22 y=%2290%22 text-anchor=%22middle%22>暂无图片</text></svg>'">
+                    <div class="card-info">
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-meta">
+                            <span class="card-race ${getRaceClass(card.race)}">${card.race}</span>
+                            <span class="card-star">${'⭐'.repeat(card.star)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 星级筛选
+        document.getElementById('starFilters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('#starFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentStar = e.target.dataset.star;
+                renderCards();
+            }
+        });
+
+        // 种族筛选
+        document.getElementById('raceFilters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('#raceFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentRace = e.target.dataset.race;
+                renderCards();
+            }
+        });
+
+        // 初始化
+        renderCards();
+    </script>
+</body>
+</html>

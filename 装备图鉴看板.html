@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月圆之夜 镜中对决 装备图鉴</title>
+<style>
+:root {
+  --bg-deep: #080b14;
+  --bg-card: #0f1322;
+  --bg-panel: #141826;
+  --bg-hover: #1c2238;
+  --border: #252d4a;
+  --border-glow: #3a4a8a;
+  --text-primary: #e8eaf6;
+  --text-secondary: #8a93c0;
+  --text-muted: #4a5278;
+  --accent: #7c6ef7;
+  --accent-glow: rgba(124,110,247,0.2);
+  --gold: #f5c842;
+  --gold-glow: rgba(245,200,66,0.15);
+  --cyan: #26c6da;
+  --green: #66bb6a;
+  --red: #ef5350;
+  --orange: #ff9800;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
+  --t: 0.2s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif;
+  background:var(--bg-deep);color:var(--text-primary);
+  min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,110,247,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(245,200,66,.06) 0%, transparent 50%);
+}
+
+/* ===== SITE SWITCHER ===== */
+.site-switcher{
+  position:relative;z-index:20;
+  background:rgba(8,11,20,.95);
+  border-bottom:1px solid var(--border);
+  padding:8px 36px;
+  display:flex;align-items:center;gap:8px;
+}
+.switcher-label{font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-right:4px;}
+.switcher-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;font-size:12px;font-weight:600;
+  border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--text-secondary);
+  cursor:pointer;transition:var(--t);text-decoration:none;
+  letter-spacing:.5px;
+}
+.switcher-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
+.switcher-btn.current{
+  background:var(--accent);border-color:var(--accent);
+  color:#fff;cursor:default;
+}
+.switcher-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:currentColor;display:inline-block;
+}
+
+/* ===== HEADER ===== */
+.site-header{
+  position:relative;z-index:10;
+  padding:24px 36px 0;
+  display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+}
+.site-title{
+  font-size:24px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,#f5c842 0%,#ff9800 45%,#ef5350 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.site-sub{
+  font-size:12px;color:var(--text-secondary);letter-spacing:1px;
+  border-left:2px solid var(--border-glow);padding-left:10px;margin-bottom:3px;
+}
+.season-badge{
+  margin-left:auto;
+  background:linear-gradient(135deg,#f5c842,#ff9800);
+  color:#1a1200;font-size:11px;font-weight:700;
+  padding:4px 14px;border-radius:20px;letter-spacing:1px;
+}
+
+/* ===== MAIN WRAP ===== */
+.main-wrap{
+  position:relative;z-index:5;
+  max-width:1400px;margin:0 auto;
+  padding:28px 36px 60px;
+}
+
+/* ===== STATS ROW ===== */
+.stats-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.stat-card{
+  flex:1;min-width:120px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:14px 18px;text-align:center;
+}
+.stat-num{font-size:30px;font-weight:800;color:var(--gold);}
+.stat-lbl{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+/* ===== STAR FILTER ===== */
+.star-filter-wrap{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:16px 20px;margin-bottom:24px;
+}
+.star-filter-title{
+  font-size:13px;font-weight:600;color:var(--text-primary);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.star-filter-title::before{
+  content:'';width:3px;height:14px;
+  background:linear-gradient(180deg,var(--gold),var(--orange));
+  border-radius:2px;
+}
+.star-filter{
+  display:flex;flex-wrap:wrap;gap:10px;
+}
+.star-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--r-md);
+  border:1px solid var(--border);background:var(--bg-panel);
+  color:var(--text-secondary);cursor:pointer;transition:var(--t);
+  font-size:13px;font-weight:500;
+}
+.star-btn:hover{border-color:var(--accent);color:var(--text-primary);}
+.star-btn.active{
+  background:var(--accent);border-color:var(--accent);
+  color:#fff;box-shadow:0 0 12px var(--accent-glow);
+}
+.star-btn .star-icon{color:var(--gold);font-size:12px;}
+.star-btn.active .star-icon{color:#fff;}
+.star-count{
+  background:rgba(255,255,255,.15);
+  padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:600;
+}
+
+/* ===== EQUIPMENT GRID ===== */
+.equip-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px;
+}
+
+/* ===== EQUIPMENT CARD ===== */
+.ec{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:14px;
+  cursor:pointer;transition:var(--t);
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.ec::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  opacity:0;transition:var(--t);
+}
+.ec:hover{border-color:var(--border-glow);background:var(--bg-hover);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.4);}
+.ec:hover::before{opacity:1;}
+
+/* Star color borders */
+.ec[data-star="2"]{border-top:2px solid #78909c;}
+.ec[data-star="2"]::before{background:#78909c;}
+.ec[data-star="3"]{border-top:2px solid #42a5f5;}
+.ec[data-star="3"]::before{background:#42a5f5;}
+.ec[data-star="4"]{border-top:2px solid #66bb6a;}
+.ec[data-star="4"]::before{background:#66bb6a;}
+.ec[data-star="5"]{border-top:2px solid #ab47bc;}
+.ec[data-star="5"]::before{background:#ab47bc;}
+.ec[data-star="6"]{border-top:2px solid #ff9800;}
+.ec[data-star="6"]::before{background:#ff9800;}
+
+.ec-img-wrap{
+  width:100%;aspect-ratio:1;
+  background:var(--bg-panel);
+  border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;overflow:hidden;
+}
+.ec-img{
+  max-width:85%;max-height:85%;
+  object-fit:contain;
+  transition:var(--t);
+}
+.ec:hover .ec-img{transform:scale(1.05);}
+.ec-name{
+  font-size:13px;font-weight:600;color:var(--text-primary);
+  margin-bottom:6px;line-height:1.3;
+}
+.ec-stars{
+  display:flex;justify-content:center;gap:2px;
+}
+.ec-star{
+  font-size:11px;color:var(--text-muted);
+}
+.ec-star.lit{color:var(--gold);}
+.ec-star.s6{color:var(--orange);}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted);}
+.empty-icon{font-size:46px;margin-bottom:10px;}
+.empty-msg{font-size:14px;}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px){
+  .site-header{padding:20px 20px 0;}
+  .main-wrap{padding:20px 20px 40px;}
+  .site-switcher{padding:8px 20px;}
+  .equip-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SITE SWITCHER -->
+<div class="site-switcher">
+  <span class="switcher-label">图鉴切换</span>
+  <a href="月圆之夜英雄看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>英雄图鉴
+  </a>
+  <a href="随从图鉴看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>随从图鉴
+  </a>
+  <a href="装备图鉴看板.html" class="switcher-btn current">
+    <span class="switcher-dot"></span>装备图鉴
+  </a>
+  <a href="咒术图鉴看板.html" class="switcher-btn">
+    <span class="switcher-dot"></span>咒术图鉴
+  </a>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1 class="site-title">装备图鉴</h1>
+  <span class="site-sub">镜中对决装备卡牌大全</span>
+  <span class="season-badge">S11 狂欢游乐园</span>
+</header>
+
+<!-- MAIN -->
+<main class="main-wrap">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="total-count">83</div>
+      <div class="stat-lbl">装备总数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ff9800">6</div>
+      <div class="stat-lbl">最高星级</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ab47bc">26</div>
+      <div class="stat-lbl">5星装备</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ef5350">24</div>
+      <div class="stat-lbl">6星装备</div>
+    </div>
+  </div>
+
+  <!-- STAR FILTER -->
+  <div class="star-filter-wrap">
+    <div class="star-filter-title">星级筛选</div>
+    <div class="star-filter">
+      <button class="star-btn active" data-filter="all">
+        <span>全部</span>
+        <span class="star-count">83</span>
+      </button>
+      <button class="star-btn" data-filter="2">
+        <span class="star-icon">★</span>
+        <span>2星</span>
+        <span class="star-count">7</span>
+      </button>
+      <button class="star-btn" data-filter="3">
+        <span class="star-icon">★</span>
+        <span>3星</span>
+        <span class="star-count">9</span>
+      </button>
+      <button class="star-btn" data-filter="4">
+        <span class="star-icon">★</span>
+        <span>4星</span>
+        <span class="star-count">17</span>
+      </button>
+      <button class="star-btn" data-filter="5">
+        <span class="star-icon">★</span>
+        <span>5星</span>
+        <span class="star-count">26</span>
+      </button>
+      <button class="star-btn" data-filter="6">
+        <span class="star-icon">★</span>
+        <span>6星</span>
+        <span class="star-count">24</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT GRID -->
+  <div class="equip-grid" id="equip-grid">
+    <!-- Equipment cards will be generated by JS -->
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty" id="empty-state" style="display:none;">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-msg">没有找到符合条件的装备</div>
+  </div>
+
+</main>
+
+<script>
+// Equipment data - extracted from filenames
+const equipments = [
+  // 2星装备 (7个)
+  {name:"短剑",star:2,img:"150px-月圆之夜_镜中对决_装备_2短剑.png"},
+  {name:"伐木斧",star:2,img:"150px-月圆之夜_镜中对决_装备_2伐木斧.png"},
+  {name:"活力护符",star:2,img:"150px-月圆之夜_镜中对决_装备_2活力护符.png"},
+  {name:"刃弩",star:2,img:"150px-月圆之夜_镜中对决_装备_2刃弩.png"},
+  {name:"研究图纸",star:2,img:"150px-月圆之夜_镜中对决_装备_2研究图纸.png"},
+  {name:"圆盾",star:2,img:"150px-月圆之夜_镜中对决_装备_2圆盾.png"},
+  {name:"月光法典",star:2,img:"150px-月圆之夜_镜中对决_装备_2月光法典.png"},
+  // 3星装备 (9个)
+  {name:"护盾",star:3,img:"150px-月圆之夜_镜中对决_装备_3护盾.png"},
+  {name:"火苗",star:3,img:"150px-月圆之夜_镜中对决_装备_3火苗.png"},
+  {name:"饥饿魔典",star:3,img:"150px-月圆之夜_镜中对决_装备_3饥饿魔典.png"},
+  {name:"尖刺壁垒",star:3,img:"150px-月圆之夜_镜中对决_装备_3尖刺壁垒.png"},
+  {name:"生命护符",star:3,img:"150px-月圆之夜_镜中对决_装备_3生命护符.png"},
+  {name:"死神之镰",star:3,img:"150px-月圆之夜_镜中对决_装备_3死神之镰.png"},
+  {name:"死亡钟摆",star:3,img:"150px-月圆之夜_镜中对决_装备_3死亡钟摆.png"},
+  {name:"玩具长枪",star:3,img:"150px-月圆之夜_镜中对决_装备_3玩具长枪.png"},
+  {name:"鲜血审判者",star:3,img:"150px-月圆之夜_镜中对决_装备_3鲜血审判者.png"},
+  {name:"殉道护符",star:3,img:"150px-月圆之夜_镜中对决_装备_3殉道护符.png"},
+  // 4星装备 (17个)
+  {name:"暗藏炸弹",star:4,img:"150px-月圆之夜_镜中对决_装备_4暗藏炸弹.png"},
+  {name:"餐叉",star:4,img:"150px-月圆之夜_镜中对决_装备_4餐叉.png"},
+  {name:"带毒藤蔓",star:4,img:"150px-月圆之夜_镜中对决_装备_4带毒藤蔓.png"},
+  {name:"弹幕射击",star:4,img:"150px-月圆之夜_镜中对决_装备_4弹幕射击.png"},
+  {name:"盾墙",star:4,img:"150px-月圆之夜_镜中对决_装备_4盾墙.png"},
+  {name:"法力护盾",star:4,img:"150px-月圆之夜_镜中对决_装备_4法力护盾.png"},
+  {name:"金匕首",star:4,img:"150px-月圆之夜_镜中对决_装备_4金匕首.png"},
+  {name:"巨大化",star:4,img:"150px-月圆之夜_镜中对决_装备_4巨大化.png"},
+  {name:"剧毒匕首",star:4,img:"150px-月圆之夜_镜中对决_装备_4剧毒匕首.png"},
+  {name:"快刀",star:4,img:"150px-月圆之夜_镜中对决_装备_4快刀.png"},
+  {name:"流血箭",star:4,img:"150px-月圆之夜_镜中对决_装备_4流血箭.png"},
+  {name:"马蹄铁",star:4,img:"150px-月圆之夜_镜中对决_装备_4马蹄铁.png"},
+  {name:"朴素法袍",star:4,img:"150px-月圆之夜_镜中对决_装备_4朴素法袍.png"},
+  {name:"双头剑",star:4,img:"150px-月圆之夜_镜中对决_装备_4双头剑.png"},
+  {name:"速度之靴",star:4,img:"150px-月圆之夜_镜中对决_装备_4速度之靴.png"},
+  {name:"提灯",star:4,img:"150px-月圆之夜_镜中对决_装备_4提灯.png"},
+  {name:"幽暗烛光",star:4,img:"150px-月圆之夜_镜中对决_装备_4幽暗烛光.png"},
+  {name:"重斧",star:4,img:"150px-月圆之夜_镜中对决_装备_4重斧.png"},
+  // 5星装备 (26个)
+  {name:"彼岸花",star:5,img:"150px-月圆之夜_镜中对决_装备_5彼岸花.png"},
+  {name:"不动如山",star:5,img:"150px-月圆之夜_镜中对决_装备_5不动如山.png"},
+  {name:"沉重背包",star:5,img:"150px-月圆之夜_镜中对决_装备_5沉重背包.png"},
+  {name:"磁铁",star:5,img:"150px-月圆之夜_镜中对决_装备_5磁铁.png"},
+  {name:"弹弓",star:5,img:"150px-月圆之夜_镜中对决_装备_5弹弓.png"},
+  {name:"弹簧拳套",star:5,img:"150px-月圆之夜_镜中对决_装备_5弹簧拳套.png"},
+  {name:"恶魔刀刃",star:5,img:"150px-月圆之夜_镜中对决_装备_5恶魔刀刃.png"},
+  {name:"发电机",star:5,img:"150px-月圆之夜_镜中对决_装备_5发电机.png"},
+  {name:"风之石",star:5,img:"150px-月圆之夜_镜中对决_装备_5风之石.png"},
+  {name:"寒冰咒文书",star:5,img:"150px-月圆之夜_镜中对决_装备_5寒冰咒文书.png"},
+  {name:"焊接器",star:5,img:"150px-月圆之夜_镜中对决_装备_5焊接器.png"},
+  {name:"尖刺羽毛",star:5,img:"150px-月圆之夜_镜中对决_装备_5尖刺羽毛.png"},
+  {name:"荆棘武器",star:5,img:"150px-月圆之夜_镜中对决_装备_5荆棘武器.png"},
+  {name:"雷刃",star:5,img:"150px-月圆之夜_镜中对决_装备_5雷刃.png"},
+  {name:"魔术棒",star:5,img:"150px-月圆之夜_镜中对决_装备_5魔术棒.png"},
+  {name:"旗帜长枪",star:5,img:"150px-月圆之夜_镜中对决_装备_5旗帜长枪.png"},
+  {name:"潜行者手套",star:5,img:"150px-月圆之夜_镜中对决_装备_5潜行者手套.png"},
+  {name:"噬魂镰",star:5,img:"150px-月圆之夜_镜中对决_装备_5噬魂镰.png"},
+  {name:"亡者之盾",star:5,img:"150px-月圆之夜_镜中对决_装备_5亡者之盾.png"},
+  {name:"袖箭",star:5,img:"150px-月圆之夜_镜中对决_装备_5袖箭.png"},
+  {name:"殉道铠甲",star:5,img:"150px-月圆之夜_镜中对决_装备_5殉道铠甲.png"},
+  {name:"元素手镯",star:5,img:"150px-月圆之夜_镜中对决_装备_5元素手镯.png"},
+  {name:"战斗法杖",star:5,img:"150px-月圆之夜_镜中对决_装备_5战斗法杖.png"},
+  {name:"长弓",star:5,img:"150px-月圆之夜_镜中对决_装备_5长弓.png"},
+  {name:"重型弩炮",star:5,img:"150px-月圆之夜_镜中对决_装备_5重型弩炮.png"},
+  {name:"助推器",star:5,img:"150px-月圆之夜_镜中对决_装备_5助推器.png"},
+  {name:"自然印记",star:5,img:"150px-月圆之夜_镜中对决_装备_5自然印记.png"},
+  // 6星装备 (24个)
+  {name:"捕兽夹",star:6,img:"150px-月圆之夜_镜中对决_装备_6捕兽夹.png"},
+  {name:"法力翡翠",star:6,img:"150px-月圆之夜_镜中对决_装备_6法力翡翠.png"},
+  {name:"反射镜",star:6,img:"150px-月圆之夜_镜中对决_装备_6反射镜.png"},
+  {name:"飞斧",star:6,img:"150px-月圆之夜_镜中对决_装备_6飞斧.png"},
+  {name:"疯狂头骨",star:6,img:"150px-月圆之夜_镜中对决_装备_6疯狂头骨.png"},
+  {name:"鬼摇铃",star:6,img:"150px-月圆之夜_镜中对决_装备_6鬼摇铃.png"},
+  {name:"护身符",star:6,img:"150px-月圆之夜_镜中对决_装备_6护身符.png"},
+  {name:"怀表",star:6,img:"150px-月圆之夜_镜中对决_装备_6怀表.png"},
+  {name:"飓风法杖",star:6,img:"150px-月圆之夜_镜中对决_装备_6飓风法杖.png"},
+  {name:"灵魂结晶",star:6,img:"150px-月圆之夜_镜中对决_装备_6灵魂结晶.png"},
+  {name:"龙之宝珠",star:6,img:"150px-月圆之夜_镜中对决_装备_6龙之宝珠.png"},
+  {name:"鹿角",star:6,img:"150px-月圆之夜_镜中对决_装备_6鹿角.png"},
+  {name:"满月",star:6,img:"150px-月圆之夜_镜中对决_装备_6满月.png"},
+  {name:"女巫坩埚",star:6,img:"150px-月圆之夜_镜中对决_装备_6女巫坩埚.png"},
+  {name:"天使手镜",star:6,img:"150px-月圆之夜_镜中对决_装备_6天使手镜.png"},
+  {name:"亡灵饼干",star:6,img:"150px-月圆之夜_镜中对决_装备_6亡灵饼干.png"},
+  {name:"旋风斧",star:6,img:"150px-月圆之夜_镜中对决_装备_6旋风斧.png"},
+  {name:"远古十字架",star:6,img:"150px-月圆之夜_镜中对决_装备_6远古十字架.png"},
+  {name:"斩龙斧",star:6,img:"150px-月圆之夜_镜中对决_装备_6斩龙斧.png"},
+  {name:"猪皮背包",star:6,img:"150px-月圆之夜_镜中对决_装备_6猪皮背包.png"},
+  {name:"灼热斗篷",star:6,img:"150px-月圆之夜_镜中对决_装备_6灼热斗篷.png"}
+];
+
+// Image base path (relative to HTML file location)
+const IMG_BASE_PATH = "file:///E:/Pictures/月圆之夜/镜中对决/装备卡牌/";
+
+let currentFilter = 'all';
+
+function renderEquipments(){
+  const grid = document.getElementById('equip-grid');
+  const empty = document.getElementById('empty-state');
+  
+  const filtered = currentFilter === 'all' 
+    ? equipments 
+    : equipments.filter(e => e.star === parseInt(currentFilter));
+  
+  if(filtered.length === 0){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  
+  grid.innerHTML = filtered.map(eq => {
+    const stars = Array(6).fill(0).map((_,i) => 
+      `<span class="ec-star ${i < eq.star ? 'lit' : ''} ${eq.star === 6 ? 's6' : ''}">★</span>`
+    ).join('');
+    
+    return `
+      <div class="ec" data-star="${eq.star}" data-name="${eq.name}">
+        <div class="ec-img-wrap">
+          <img class="ec-img" src="${IMG_BASE_PATH}${eq.img}" alt="${eq.name}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="ec-name">${eq.name}</div>
+        <div class="ec-stars">${stars}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Filter buttons
+document.querySelectorAll('.star-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderEquipments();
+  });
+});
+
+// Initial render
+renderEquipments();
+</script>
+
+</body>
+</html>

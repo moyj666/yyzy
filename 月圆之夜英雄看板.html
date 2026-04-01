@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月圆之夜 镜中对决 英雄图鉴</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: #eee;
+}
+
+/* ===== 顶部导航栏（与随从图鉴一致） ===== */
+.top-nav {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-title {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-title .icon {
+    font-size: 24px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #aaa;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.nav-link.active {
+    background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* ===== 主容器 ===== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+/* ===== 页面标题 ===== */
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.page-subtitle {
+    color: #888;
+    font-size: 14px;
+}
+
+/* ===== 统计卡片 ===== */
+.stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 15px 30px;
+    text-align: center;
+    min-width: 120px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* ===== 筛选栏 ===== */
+.filter-section {
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-row:last-child {
+    margin-bottom: 0;
+}
+
+.filter-label {
+    font-size: 14px;
+    color: #aaa;
+    min-width: 60px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 13px;
+}
+
+.filter-btn:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.filter-btn.active {
+    background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* 强度筛选按钮颜色 */
+.filter-btn.tier-t0.active { background: linear-gradient(145deg, #ffd700, #ffaa00); color: #000; }
+.filter-btn.tier-t1.active { background: linear-gradient(145deg, #9b59b6, #8e44ad); }
+.filter-btn.tier-t2.active { background: linear-gradient(145deg, #3498db, #2980b9); }
+.filter-btn.tier-t3.active { background: linear-gradient(145deg, #7f8c8d, #616a6b); }
+
+/* 类型筛选按钮颜色 */
+.filter-btn.type-active.active { background: linear-gradient(145deg, #e74c3c, #c0392b); }
+.filter-btn.type-passive.active { background: linear-gradient(145deg, #27ae60, #1e8449); }
+
+.search-box {
+    margin-left: auto;
+}
+
+.search-input {
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    border-radius: 25px;
+    width: 250px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 15px rgba(102,126,234,0.3);
+}
+
+.search-input::placeholder {
+    color: #666;
+}
+
+/* ===== 英雄网格 ===== */
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.hero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--tier-color, #667eea);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.hero-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.hero-card:hover::before {
+    opacity: 1;
+}
+
+.hero-card.tier-t0 { --tier-color: #ffd700; border-color: rgba(255,215,0,0.3); }
+.hero-card.tier-t1 { --tier-color: #9b59b6; border-color: rgba(155,89,182,0.3); }
+.hero-card.tier-t2 { --tier-color: #3498db; border-color: rgba(52,152,219,0.3); }
+.hero-card.tier-t3 { --tier-color: #7f8c8d; border-color: rgba(127,140,141,0.3); }
+
+.card-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.hero-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+}
+
+.hero-image.no-image {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.hero-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.hero-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.tier-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.tier-badge.t0 { background: linear-gradient(145deg, #ffd700, #ffaa00); color: #000; }
+.tier-badge.t1 { background: linear-gradient(145deg, #9b59b6, #8e44ad); color: #fff; }
+.tier-badge.t2 { background: linear-gradient(145deg, #3498db, #2980b9); color: #fff; }
+.tier-badge.t3 { background: linear-gradient(145deg, #7f8c8d, #616a6b); color: #fff; }
+
+.s11-tag {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+    color: #fff;
+    font-weight: bold;
+}
+
+.skill-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.skill-icon {
+    font-size: 16px;
+}
+
+.skill-name {
+    font-size: 14px;
+    color: #ffd700;
+}
+
+.skill-cost {
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.skill-cost.active {
+    background: rgba(231,76,60,0.3);
+    color: #e74c3c;
+    border: 1px solid rgba(231,76,60,0.5);
+}
+
+.skill-cost.passive {
+    background: rgba(39,174,96,0.3);
+    color: #27ae60;
+    border: 1px solid rgba(39,174,96,0.5);
+}
+
+.skill-cost.free {
+    background: rgba(52,152,219,0.3);
+    color: #3498db;
+    border: 1px solid rgba(52,152,219,0.5);
+}
+
+.skill-desc {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.start-bonus {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    background: rgba(255,215,0,0.15);
+    color: #ffd700;
+    border: 1px solid rgba(255,215,0,0.3);
+}
+
+.tag {
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    background: rgba(255,255,255,0.1);
+    color: #888;
+}
+
+.no-result {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    font-size: 16px;
+    grid-column: 1 / -1;
+}
+
+/* ===== 弹窗 ===== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1e3a5f 0%, #2d4a6f 100%);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: rgba(231,76,60,0.5);
+}
+
+.modal-header {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.modal-image.no-image {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+}
+
+.modal-title-section {
+    flex: 1;
+}
+
+.modal-hero-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-skill-name {
+    font-size: 16px;
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.modal-section {
+    margin-bottom: 15px;
+}
+
+.modal-label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.modal-value {
+    font-size: 14px;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.modal-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.modal-tag {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    background: rgba(255,255,255,0.1);
+    color: #ccc;
+}
+
+.modal-note {
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #ffd700;
+    line-height: 1.6;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-box {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="top-nav">
+    <div class="nav-title">
+        <span class="icon">🎭</span>
+        <span>月圆之夜 · 镜中对决</span>
+    </div>
+    <div class="nav-links">
+        <a class="nav-link active" href="月圆之夜英雄看板.html">英雄图鉴</a>
+        <a class="nav-link" href="随从图鉴看板.html">随从图鉴</a>
+        <a class="nav-link" href="装备图鉴看板.html">装备图鉴</a>
+        <a class="nav-link" href="咒术图鉴看板.html">咒术图鉴</a>
+    </div>
+</div>
+
+<!-- 主容器 -->
+<div class="container">
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <div class="page-title">英雄图鉴</div>
+        <div class="page-subtitle">S11 狂欢游乐园 · 48位英雄</div>
+    </div>
+    
+    <!-- 统计栏 -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value" id="totalCount">48</div>
+            <div class="stat-label">英雄总数</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="activeCount" style="color: #e74c3c;">-</div>
+            <div class="stat-label">主动技能</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="passiveCount" style="color: #27ae60;">-</div>
+            <div class="stat-label">被动技能</div>
+        </div>
+    </div>
+    
+    <!-- 筛选栏 -->
+    <div class="filter-section">
+        <div class="filter-row">
+            <span class="filter-label">强度</span>
+            <div class="filter-buttons" id="tierFilters">
+                <button class="filter-btn active" data-tier="all">全部</button>
+                <button class="filter-btn tier-t0" data-tier="T0">T0</button>
+                <button class="filter-btn tier-t1" data-tier="T1">T1</button>
+                <button class="filter-btn tier-t2" data-tier="T2">T2</button>
+                <button class="filter-btn tier-t3" data-tier="T3">T3</button>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索英雄 / 技能...">
+            </div>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">类型</span>
+            <div class="filter-buttons" id="typeFilters">
+                <button class="filter-btn active" data-type="all">全部</button>
+                <button class="filter-btn type-active" data-type="主动">⚡ 主动</button>
+                <button class="filter-btn type-passive" data-type="被动">🌀 被动</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 英雄网格 -->
+    <div class="hero-grid" id="heroGrid"></div>
+</div>
+
+<!-- 弹窗 -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+// 英雄数据
+const HEROES = [
+    {id:1,name:"小猫进货商",emoji:"🐱",skillName:"货源充足！",skillCost:2,skillType:"主动",skillDesc:"卖出1个随从，获得1个原始复制",startBonus:"2金币",tier:"T2",tags:["经济","复制"]},
+    {id:2,name:"齿轮绅士",emoji:"⚙️",skillName:"强力改装",skillCost:"被动",skillType:"被动",skillDesc:"永久使商店中的随从获得+1+1",startBonus:"1金币",tier:"T1",tags:["强化","商店"]},
+    {id:3,name:"剑术导师",emoji:"⚔️",skillName:"战斗指导",skillCost:3,skillType:"主动",skillDesc:"将商店1个随从置入手牌，并使其属性值翻倍；商店等级达到4级后变为3倍",startBonus:"2金币",tier:"T0",tags:["属性翻倍","战力"]},
+    {id:4,name:"驯鹿勇士",emoji:"🦌",skillName:"攻守兼备",skillCost:1,skillType:"主动",skillDesc:"使1个随从的攻击或生命增加，直到二者相等",startBonus:"1金币",tier:"T2",tags:["均衡","属性"]},
+    {id:5,name:"变色龙大师",emoji:"🦎",skillName:"马戏表演",skillCost:2,skillType:"主动",skillDesc:"获得1张变色龙（1/1，战吼：随机获得1个相邻友方的关键词）；在你三连后复原技能",startBonus:"1金币",tier:"T2",tags:["变色龙","关键词"]},
+    {id:6,name:"掌灯者",emoji:"🕯️",skillName:"指引之光",skillCost:1,skillType:"主动",skillDesc:"将1个不超过3星的随从变为金色（三连合成），每局游戏限2次",startBonus:"1金币",tier:"T1",tags:["金色","三连","限次"]},
+    {id:7,name:"黑天鹅",emoji:"🦢",skillName:"控制之力",skillCost:2,skillType:"主动",skillDesc:"选择1个商店的卡牌或场上的随从，将它移到手中",startBonus:"无",tier:"T1",tags:["控制","移动"]},
+    {id:8,name:"铸剑工匠",emoji:"🔨",skillName:"装备锻造",skillCost:2,skillType:"主动",skillDesc:"挑选1张当前等级的装备（等级2解锁）",startBonus:"无",tier:"T1",tags:["装备","挑选"]},
+    {id:9,name:"占卜师",emoji:"🔮",skillName:"法术创造",skillCost:1,skillType:"主动",skillDesc:"挑选1张当前等级的咒术（等级2解锁）",startBonus:"2金币",tier:"T1",tags:["咒术","挑选"]},
+    {id:10,name:"影魔",emoji:"👿",skillName:"如影随行",skillCost:2,skillType:"主动",skillDesc:"战斗开始时，获得对手星级最高的随从的原始复制并召唤到场上",startBonus:"1金币",tier:"T0",tags:["复制","对手","战斗"]},
+    {id:11,name:"黑猫",emoji:"🐈",skillName:"魔力激发",skillCost:1,skillType:"主动",skillDesc:"本回合下张咒术牌生效2次",startBonus:"1金币",tier:"T2",tags:["咒术","双效"]},
+    {id:12,name:"圣诞矮人",emoji:"🎅",skillName:"圣诞盲盒",skillCost:1,skillType:"主动",skillDesc:"随机召唤1个不超过当前等级的随从，使其变为1/1",startBonus:"无",tier:"T3",tags:["随机","召唤"]},
+    {id:13,name:"魔法树丛",emoji:"🌳",skillName:"枝繁叶茂",skillCost:"被动",skillType:"被动",skillDesc:"升到4星后，挑选2张不限等级的成长牌",startBonus:"1金币",tier:"T1",tags:["成长","挑选"]},
+    {id:14,name:"幽灵狗",emoji:"🐕",skillName:"永恒饥饿",skillCost:"被动",skillType:"被动",skillDesc:"进入战斗前，本回合每获得过1张牌，随机使一个友方获得+1+1",startBonus:"2金币",tier:"T1",tags:["成长","循环"]},
+    {id:15,name:"厨师学徒",emoji:"👨‍🍳",skillName:"美味料理",skillCost:1,skillType:"主动",skillDesc:"获得1张随机料理牌",startBonus:"2金币",tier:"T2",tags:["料理","随机"]},
+    {id:16,name:"机械魔术师",emoji:"🤖",skillName:"机械魔术",skillCost:1,skillType:"主动",skillDesc:"获得最左侧手牌的原始复制，每局游戏限3次",startBonus:"2金币",tier:"T1",tags:["复制","限次"]},
+    {id:17,name:"精灵女王",emoji:"🧝",skillName:"生机焕发",skillCost:1,skillType:"主动",skillDesc:"使1个友方+2+1并触发成长效果",startBonus:"2金币",tier:"T1",tags:["成长","强化"]},
+    {id:18,name:"缝合怪",emoji:"🧟",skillName:"缝合",skillCost:0,skillType:"主动",skillDesc:"选择1个友方，下次战斗开始时，其会附着给同列的另1个友方",startBonus:"2金币",tier:"T1",tags:["附着","战斗"]},
+    {id:19,name:"杂货商人",emoji:"🛒",skillName:"杂货上新",skillCost:0,skillType:"主动",skillDesc:"刷新商店，出现当前等级的装备、随从、咒术各一个（等级2解锁）",startBonus:"1金币",tier:"T2",tags:["刷新","装备","咒术"]},
+    {id:20,name:"星雷女巫",emoji:"⚡",skillName:"闪电共鸣",skillCost:0,skillType:"主动",skillDesc:"选择1个友方，与其相同攻击的友方都获得+1+1",startBonus:"2金币",tier:"T1",tags:["共鸣","群体强化"]},
+    {id:21,name:"黑市商贩",emoji:"🎪",skillName:"珍藏私货",skillCost:1,skillType:"主动",skillDesc:"选择1个友方，刷出与之相同阵营的随从",startBonus:"2金币",tier:"T1",tags:["阵营","搜索"]},
+    {id:22,name:"鲨鱼恶霸",emoji:"🦈",skillName:"易怒鲨鱼",skillCost:1,skillType:"主动",skillDesc:"使1个随从的攻击变为8点（升级商店后额外+4点，即12点）",startBonus:"2金币",tier:"T2",tags:["攻击","爆发"]},
+    {id:23,name:"地灵监工",emoji:"📢",skillName:"监工号角",skillCost:1,skillType:"主动",skillDesc:"使1个友方获得+2+2；友方属性值提升15次后升级（剩余计数递减）",startBonus:"1金币",tier:"T1",tags:["成长","属性"]},
+    {id:24,name:"森灵",emoji:"🌿",skillName:"聚魂术",skillCost:1,skillType:"主动",skillDesc:"使1个友方获得++，并吸取其他友方一半属性值（其他友方属性减半，全部转移给目标）",startBonus:"无",tier:"T0",tags:["集中","爆发"]},
+    {id:25,name:"暴风女士",emoji:"🌪️",skillName:"幼崽",skillCost:"被动",skillType:"被动",skillDesc:"开局和每次升级时，获得小雪宝（1星，基础属性0/1，成长：+1+1）",startBonus:"2金币",tier:"T1",tags:["成长","召唤物"]},
+    {id:26,name:"独眼调查员",emoji:"🔍",skillName:"速战速决",skillCost:"被动",skillType:"被动",skillDesc:"所有友方获得1层疯狂；你总是最先发起攻击",startBonus:"2金币",tier:"T1",tags:["疯狂","先攻"]},
+    {id:27,name:"批发商人",emoji:"📦",skillName:"批量采购",skillCost:"被动",skillType:"被动",skillDesc:"每回合首次购买后，本回合剩余购买只需2金币",startBonus:"无",tier:"T1",tags:["经济","购买"]},
+    {id:28,name:"占星师",emoji:"🔭",skillName:"观星",skillCost:"被动",skillType:"被动",skillDesc:"阵容星级总数达到12后觉醒：卖出物品会使商店最左侧的牌星级+1",startBonus:"2金币",tier:"T2",tags:["觉醒","星级"]},
+    {id:29,name:"古堡三杰",emoji:"🏰",skillName:"招募新人",skillCost:0,skillType:"主动",skillDesc:"挑选1个当前等级的随从，每局游戏限3次",startBonus:"无",tier:"T1",tags:["挑选","限次"]},
+    {id:30,name:"鼹鼠奸商",emoji:"🐀",skillName:"强买强卖",skillCost:0,skillType:"主动",skillDesc:"移除1个友方，本回合下次购买不消耗金币",startBonus:"无",tier:"T2",tags:["经济","牺牲"]},
+    {id:31,name:"小猪建筑师",emoji:"🐷",skillName:"简易掩体",skillCost:0,skillType:"主动",skillDesc:"本轮战斗英雄受到伤害-10，每局游戏限3次",startBonus:"3金币",tier:"T2",tags:["防御","减伤","限次"]},
+    {id:32,name:"掘墓人",emoji:"⛏️",skillName:"挖掘",skillCost:"被动",skillType:"被动",skillDesc:"出售4个随从后，获得1张当前等级的随从牌（循环触发）",startBonus:"1金币",tier:"T2",tags:["出售","循环"]},
+    {id:33,name:"天才发明家",emoji:"💡",skillName:"灵感",skillCost:"被动",skillType:"被动",skillDesc:"升级后，额外获得1张升级奖励",startBonus:"无",tier:"T1",tags:["升级","奖励"]},
+    {id:34,name:"调酒师",emoji:"🍸",skillName:"冷萃特调",skillCost:"被动",skillType:"被动",skillDesc:"升级后，每有1个不同阵营的友方，获得1金币",startBonus:"无",tier:"T1",tags:["多阵营","经济"]},
+    {id:35,name:"鱼美人",emoji:"🧜",skillName:"潮汐之力",skillCost:"被动",skillType:"被动",skillDesc:"友方获得属性值时，额外+生命",startBonus:"无",tier:"T1",tags:["生命","增益"]},
+    {id:36,name:"狼王",emoji:"🐺",skillName:"诅咒力量",skillCost:"被动",skillType:"被动",skillDesc:"友方具有击杀：永久+1+1",startBonus:"无",tier:"T1",tags:["击杀","成长"]},
+    {id:37,name:"流浪佣兵",emoji:"🧙",skillName:"佣兵伙伴",skillCost:"被动",skillType:"被动",skillDesc:"购买中立阵营随从时，获得1金币与1经验",startBonus:"无",tier:"T2",tags:["中立","经济","经验"]},
+    {id:38,name:"雷精灵",emoji:"🗡️",skillName:"疾驰",skillCost:"被动",skillType:"被动",skillDesc:"购买1张牌后，本回合下次刷新消耗金币为0",startBonus:"1金币",tier:"T1",tags:["刷新","经济"]},
+    {id:39,name:"乞讨者",emoji:"👴",skillName:"乞讨",skillCost:"被动",skillType:"被动",skillDesc:"若你在回合结束时没有金币，则在下回合额外获得2金币",startBonus:"无",tier:"T2",tags:["经济","零金"]},
+    {id:40,name:"追梦旅人",emoji:"🌠",skillName:"收集影子",skillCost:"被动",skillType:"被动",skillDesc:"场上首次拥有6个友方时，挑选1个5星随从",startBonus:"无",tier:"T1",tags:["满场","挑选"]},
+    {id:41,name:"皇家指挥官",emoji:"👑",skillName:"招募新兵",skillCost:"被动",skillType:"被动",skillDesc:"升级后，获得1张当前等级的随从",startBonus:"无",tier:"T1",tags:["升级","随从"]},
+    {id:42,name:"地灵殉道者",emoji:"💀",skillName:"灵界沟通",skillCost:"被动",skillType:"被动",skillDesc:"每累计死亡8个友方随从，获得1张随机随从牌（循环触发）",startBonus:"2金币",tier:"T2",tags:["死亡","循环"]},
+    {id:43,name:"贪婪地精",emoji:"💰",skillName:"唯利是图",skillCost:"被动",skillType:"被动",skillDesc:"当你卖出随从时，获得1点经验",startBonus:"2金币",tier:"T2",tags:["出售","经验"]},
+    {id:44,name:"能量装置",emoji:"🔋",skillName:"快速充能",skillCost:"被动",skillType:"被动",skillDesc:"每回合额外获得1点经验",startBonus:"1金币",tier:"T0",tags:["经验","升级快"]},
+    {id:45,name:"火精灵",emoji:"🔥",skillName:"火焰加护",skillCost:"被动",skillType:"被动",skillDesc:"刷新商店后，第1个友方获得+1+1",startBonus:"无",tier:"T2",tags:["刷新","成长"]},
+    {id:46,name:"蜡烛人",emoji:"🕯️",skillName:"燃烧",skillCost:1,skillType:"主动",skillDesc:"失去2生命，获得1张火焰（咒术：挑选1张随从牌）",startBonus:"无",tier:"T2",tags:["咒术","代价"]},
+    {id:47,name:"玩具商贩",emoji:"🧸",skillName:"制作玩具",skillCost:0,skillType:"主动",skillDesc:"选择1个随从，下次战斗开始时，召唤一个1/1复制",startBonus:"无",tier:"T2",tags:["召唤","复制"]},
+    {id:48,name:"乐园小丑",emoji:"🤡",skillName:"狂欢演出",skillCost:"被动",skillType:"被动",skillDesc:"每2回合开始时，从2项乐园演出中选择1个作为你的英雄技能（演出效果随机生成，涵盖经济补充、战力强化等多种增益）",startBonus:"待确认",tier:"T0",tags:["S11新英雄","随机技能","狂欢机制"],isNew:true,note:"S11赛季专属英雄露米娅。乐园演出选项每局随机生成，考验玩家临场决策能力。"}
+];
+
+// 图片映射（基于文件名）
+const IMAGE_MAP = {
+    "小猫进货商": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_小猫进货商.png",
+    "齿轮绅士": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_齿轮绅士.png",
+    "剑术导师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_剑术导师.png",
+    "驯鹿勇士": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_驯鹿勇士.png",
+    "变色龙大师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_变色龙大师.png",
+    "掌灯者": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_掌灯者.png",
+    "黑天鹅": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_黑天鹅.png",
+    "铸剑工匠": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_铸剑工匠.png",
+    "占卜师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_占卜师.png",
+    "影魔": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_影魔.png",
+    "黑猫": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_黑猫.png",
+    "圣诞矮人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_圣诞矮人.png",
+    "魔法树丛": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_魔法树丛.png",
+    "幽灵狗": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_幽灵狗.png",
+    "厨师学徒": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_厨师学徒.png",
+    "机械魔术师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_机械魔术师.png",
+    "精灵女王": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_精灵女王.png",
+    "缝合怪": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_缝合怪.png",
+    "杂货商人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_杂货商人.png",
+    "星雷女巫": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_星雷女巫.png",
+    "黑市商贩": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_黑市商贩.png",
+    "鲨鱼恶霸": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_鲨鱼恶霸.png",
+    "地灵监工": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_地灵监工.png",
+    "森灵": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_森灵.png",
+    "暴风女士": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_暴风女士.png",
+    "独眼调查员": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_独眼调查员.png",
+    "批发商人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_批发商人.png",
+    "占星师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_占星师.png",
+    "古堡三杰": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_古堡三杰.png",
+    "鼹鼠奸商": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_鼹鼠奸商.png",
+    "小猪建筑师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_小猪建筑师.png",
+    "掘墓人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_掘墓人.png",
+    "天才发明家": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_天才发明家.png",
+    "调酒师": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_调酒师.png",
+    "鱼美人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_鱼美人.png",
+    "狼王": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_狼王.png",
+    "流浪佣兵": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_流浪佣兵.png",
+    "雷精灵": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_雷精灵.png",
+    "乞讨者": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_乞讨者.png",
+    "追梦旅人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_追梦旅人.png",
+    "皇家指挥官": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_皇家指挥官.png",
+    "地灵殉道者": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_地灵殉道者.png",
+    "贪婪地精": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_贪婪地精.png",
+    "能量装置": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_能量装置.png",
+    "火精灵": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_火精灵.png",
+    "蜡烛人": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_蜡烛人.png",
+    "玩具商贩": "英雄图鉴/150px-月圆之夜_镜中对决_英雄_玩具商贩.png"
+    // 乐园小丑没有图片
+};
+
+// 状态
+let currentTier = 'all';
+let currentType = 'all';
+let currentSearch = '';
+
+// 初始化统计
+function initStats() {
+    const activeCount = HEROES.filter(h => h.skillType === '主动').length;
+    const passiveCount = HEROES.filter(h => h.skillType === '被动').length;
+    document.getElementById('activeCount').textContent = activeCount;
+    document.getElementById('passiveCount').textContent = passiveCount;
+}
+
+// 获取英雄图片
+function getHeroImage(hero) {
+    const imgPath = IMAGE_MAP[hero.name];
+    if (imgPath) {
+        return `<img src="${imgPath}" alt="${hero.name}" class="hero-image" onerror="this.outerHTML='<div class=\\'hero-image no-image\\'>${hero.emoji}</div>'">`;
+    }
+    return `<div class="hero-image no-image">${hero.emoji}</div>`;
+}
+
+// 获取技能消耗显示
+function getSkillCost(cost) {
+    if (cost === '被动') {
+        return '<span class="skill-cost passive">🌀 被动</span>';
+    }
+    if (cost === 0) {
+        return '<span class="skill-cost free">⚡ 免费</span>';
+    }
+    return `<span class="skill-cost active">⚡ ${cost}金币</span>`;
+}
+
+// 创建英雄卡片
+function createHeroCard(hero) {
+    const newTag = hero.isNew ? '<span class="s11-tag">S11</span>' : '';
+    const startBonus = hero.startBonus !== '无' && hero.startBonus !== '待确认' 
+        ? `<span class="start-bonus">开局+${hero.startBonus}</span>` 
+        : '';
+    const tags = hero.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+    
+    return `
+        <div class="hero-card tier-${hero.tier.toLowerCase()}" onclick="openModal(${hero.id})">
+            <div class="card-header">
+                ${getHeroImage(hero)}
+                <div class="hero-info">
+                    <div class="hero-name-row">
+                        <span class="hero-name">${hero.name}</span>
+                        ${newTag}
+                        <span class="tier-badge ${hero.tier.toLowerCase()}">${hero.tier}</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-icon">${hero.emoji}</span>
+                        <span class="skill-name">${hero.skillName}</span>
+                        ${getSkillCost(hero.skillCost)}
+                    </div>
+                </div>
+            </div>
+            <div class="skill-desc">${hero.skillDesc}</div>
+            <div class="card-footer">
+                ${startBonus}
+                ${tags}
+            </div>
+        </div>
+    `;
+}
+
+// 渲染英雄网格
+function renderHeroes() {
+    const searchLower = currentSearch.toLowerCase();
+    const filtered = HEROES.filter(hero => {
+        if (currentTier !== 'all' && hero.tier !== currentTier) return false;
+        if (currentType !== 'all' && hero.skillType !== currentType) return false;
+        if (searchLower) {
+            const match = hero.name.toLowerCase().includes(searchLower) ||
+                         hero.skillName.toLowerCase().includes(searchLower) ||
+                         hero.skillDesc.toLowerCase().includes(searchLower) ||
+                         hero.tags.some(t => t.toLowerCase().includes(searchLower));
+            if (!match) return false;
+        }
+        return true;
+    });
+    
+    const html = filtered.length > 0 
+        ? filtered.map(createHeroCard).join('')
+        : '<div class="no-result">🔍 没有找到匹配的英雄</div>';
+    
+    document.getElementById('heroGrid').innerHTML = html;
+}
+
+// 打开弹窗
+function openModal(heroId) {
+    const hero = HEROES.find(h => h.id === heroId);
+    if (!hero) return;
+    
+    const newTag = hero.isNew ? '<span class="s11-tag">S11</span>' : '';
+    const tags = hero.tags.map(tag => `<span class="modal-tag">${tag}</span>`).join('');
+    const noteHtml = hero.note ? `<div class="modal-note">💡 ${hero.note}</div>` : '';
+    
+    document.getElementById('modalBody').innerHTML = `
+        <div class="modal-header">
+            ${getHeroImage(hero)}
+            <div class="modal-title-section">
+                <div class="modal-hero-name">${hero.name} ${newTag}</div>
+                <div class="modal-skill-name">${hero.emoji} ${hero.skillName} ${getSkillCost(hero.skillCost)}</div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-label">技能描述</div>
+            <div class="modal-value">${hero.skillDesc}</div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-label">开局奖励</div>
+            <div class="modal-value">${hero.startBonus}</div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-label">强度评级</div>
+            <div class="modal-value"><span class="tier-badge ${hero.tier.toLowerCase()}">${hero.tier}</span></div>
+        </div>
+        <div class="modal-section">
+            <div class="modal-label">标签</div>
+            <div class="modal-tags">${tags}</div>
+        </div>
+        ${noteHtml}
+    `;
+    
+    document.getElementById('modalOverlay').classList.add('open');
+}
+
+// 关闭弹窗
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// 筛选按钮事件
+document.getElementById('tierFilters').addEventListener('click', e => {
+    if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('#tierFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        currentTier = e.target.dataset.tier;
+        renderHeroes();
+    }
+});
+
+document.getElementById('typeFilters').addEventListener('click', e => {
+    if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        currentType = e.target.dataset.type;
+        renderHeroes();
+    }
+});
+
+// 搜索事件
+document.getElementById('searchInput').addEventListener('input', e => {
+    currentSearch = e.target.value;
+    renderHeroes();
+});
+
+// 弹窗点击外部关闭
+document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+});
+
+// 初始化
+initStats();
+renderHeroes();
+</script>
+
+</body>
+</html>
